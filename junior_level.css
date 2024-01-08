@@ -1,4 +1,4 @@
-<style>
+
       @font-face {
     font-family: 'PP Mori'; /* Используйте уникальное имя для вашего шрифта */
     src: url('fonts/PPMori-SemiBold.woff') format('woff'); /* Современные браузеры */
@@ -25,22 +25,10 @@
       max-width: 95%; 
       margin: auto; 
       }
-     .play-button a {
-    color: white; /* Цвет текста ссылки внутри кнопки */
-    cursor: url('img/cursor.png')16 16, auto;
-    text-decoration: none; /* Убирает подчеркивание для ссылки внутри кнопки */
-}
-
-.play-button:hover a {
-    color: white; /* Цвет текста ссылки внутри кнопки при наведении */
-}
+    
 a {
     color: black; 
 }
-.play-button:hover {
-    background-color: blue; /* Цвет при наведении */
-}
-
 
 .text-left-bottom, .text-right-bottom {
     
@@ -58,4 +46,3 @@ a {
     right: 15px;
 }
     }
-  </style>
