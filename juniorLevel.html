@@ -2,88 +2,37 @@
 <html>
 <head>
   <meta charset="utf-8">
+    <title>Type Match Junior</title>
   <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="stylesheet" href="junior_level.css">
 
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
   <script language="javascript" type="text/javascript" src="matchtypep5.js"></script>
   <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
-
-  <style>
-      @font-face {
-    font-family: 'PP Mori'; /* Используйте уникальное имя для вашего шрифта */
-    src: url('fonts/PPMori-SemiBold.woff') format('woff'); /* Современные браузеры */
-      резерва */
-    font-weight: normal;
-    font-style: normal;
-}
-    html, body {
-        cursor: url('img/cursor.png')16 16, auto;
-        font-family: 'PP Mori';
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-        background-color: #E4E4E4;
-         letter-spacing: 0.3px
-    }
-
-    canvas {
-      display: block; 
-      max-width: 95%; 
-      margin: auto; 
-      }
-     .play-button a {
-    color: white; /* Цвет текста ссылки внутри кнопки */
-    cursor: url('img/cursor.png')16 16, auto;
-    text-decoration: none; /* Убирает подчеркивание для ссылки внутри кнопки */
-}
-
-.play-button:hover a {
-    color: white; /* Цвет текста ссылки внутри кнопки при наведении */
-}
-a {
-    color: black; 
-}
-.play-button:hover {
-    background-color: blue; /* Цвет при наведении */
-}
-
-
-.text-left-bottom, .text-right-bottom {
-    
-    position: fixed; /* Использование 'fixed' для позиционирования относительно окна браузера */
-    bottom: 3px; /* Отступ от нижнего края */
-    font-size: 12px;   
-    color: #000000;
-}
-
-.text-left-bottom {
-    left: 15px;
-}
-
-.text-right-bottom {
-    right: 15px;
-}
-    }
-  </style>
 </head>
 
 <body>
  
   <script>
-    function adjustCanvasSize() {
+      document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(adjustCanvasSize, 100); // Задержка в 100 миллисекунд
+});
+     function adjustCanvasSize() {
       const canvasElement = document.querySelector('canvas');
       if (canvasElement) {
+        // Установить max-height в зависимости от текущей ширины канваса
         canvasElement.style.maxHeight = canvasElement.offsetWidth + 'px';
       }
     }
-    window.addEventListener('resize', adjustCanvasSize);
 
+    // Вызов функции adjustCanvasSize после полной загрузки содержимого
     document.addEventListener('DOMContentLoaded', adjustCanvasSize);
+
+    // Вызов функции adjustCanvasSize при изменении размера окна
+    window.addEventListener('resize', adjustCanvasSize);
+  
   </script>
       <p class="text-left-bottom">CREATED BY <a href="http://www.instagram.com/synthymental/" target="_blank">DANIIL SVETLOV</a>
     </p>
