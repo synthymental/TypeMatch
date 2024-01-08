@@ -7,8 +7,9 @@
     font-style: normal;
 }
     html, body {
+            font-family: 'PP Mori', sans-serif; 
         cursor: url('img/cursor.png')16 16, auto;
-        font-family: 'PP Mori';
+       
       height: 100%;
       margin: 0;
       padding: 0;
@@ -31,7 +32,7 @@ a {
 }
 
 .text-left-bottom, .text-right-bottom {
-    
+        font-family: 'PP Mori', sans-serif; 
     position: fixed; /* Использование 'fixed' для позиционирования относительно окна браузера */
     bottom: 3px; /* Отступ от нижнего края */
     font-size: 12px;   
