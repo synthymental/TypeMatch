@@ -1,0 +1,61 @@
+<style>
+      @font-face {
+    font-family: 'PP Mori'; /* Используйте уникальное имя для вашего шрифта */
+    src: url('fonts/PPMori-SemiBold.woff') format('woff'); /* Современные браузеры */
+      резерва */
+    font-weight: normal;
+    font-style: normal;
+}
+    html, body {
+        cursor: url('img/cursor.png')16 16, auto;
+        font-family: 'PP Mori';
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+        background-color: #E4E4E4;
+         letter-spacing: 0.3px
+    }
+
+    canvas {
+      display: block; 
+      max-width: 95%; 
+      margin: auto; 
+      }
+     .play-button a {
+    color: white; /* Цвет текста ссылки внутри кнопки */
+    cursor: url('img/cursor.png')16 16, auto;
+    text-decoration: none; /* Убирает подчеркивание для ссылки внутри кнопки */
+}
+
+.play-button:hover a {
+    color: white; /* Цвет текста ссылки внутри кнопки при наведении */
+}
+a {
+    color: black; 
+}
+.play-button:hover {
+    background-color: blue; /* Цвет при наведении */
+}
+
+
+.text-left-bottom, .text-right-bottom {
+    
+    position: fixed; /* Использование 'fixed' для позиционирования относительно окна браузера */
+    bottom: 3px; /* Отступ от нижнего края */
+    font-size: 12px;   
+    color: #000000;
+}
+
+.text-left-bottom {
+    left: 15px;
+}
+
+.text-right-bottom {
+    right: 15px;
+}
+    }
+  </style>
