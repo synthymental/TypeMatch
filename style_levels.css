@@ -1,0 +1,98 @@
+@font-face {
+    font-family: 'PP Mori'; /* Используйте уникальное имя для вашего шрифта */
+    src: url('fonts/PPMori-SemiBold.woff') format('woff'); /* Современные браузеры */
+      резерва */
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, html {
+    font-family: 'PP Mori', sans-serif; 
+    cursor: url('img/cursor.png')16 16, auto;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'PP Mori', sans-serif; /* Или ваш шрифт 'PP Mori' */
+    background-color: #E4E4E4; /* Или любой другой цвет фона */
+    text-align: center;
+     letter-spacing: 0.3px
+}
+
+.level-container {
+    width: 100%;
+    max-width: 600px; /* Можно изменить в соответствии с вашими предпочтениями */
+}
+
+h1 {
+    font-size: 32px; /* Или любой другой размер */
+    margin-bottom: 50px; /* Расстояние до кнопок */
+}
+
+.level-button {
+    cursor: url('img/cursor.png')16 16, auto;
+    display: block; /* Кнопки будут стакаться вертикально */
+    margin: 26px auto; /* Отступ сверху и снизу, авто по бокам для центрирования */
+    padding: 8px 33px; /* Размеры кнопок */
+    font-size: 40px; /* Размер текста в кнопках */
+    color: white; /* Цвет текста кнопок */
+    background-color: #ff2a2a; /* Фоновый цвет кнопок */
+    border: none; /* Убрать границу */
+    border-radius: 350px; /* Скругление углов */   
+    transition: background-color 0.3s; 
+}
+
+.level-button a{
+    color: white; /* Цвет текста ссылки внутри кнопки */
+    cursor: url('img/cursor.png')16 16, auto;
+    text-decoration: none;   
+}
+.level-button:hover {
+    background-color: #00A3FF; /* Цвет кнопки при наведении */
+}
+
+/* Стили для кнопок в их исходном состоянии (неактивные) */
+#middle,
+#senior {
+    background-color: #FFA2A2; /* Светло-красный цвет для неактивных кнопок */
+}
+
+.disclaimer {
+    margin-top: 40px; /* Расстояние от последней кнопки */
+    font-size: 12px; /* Размер текста */
+    color: #9B9B9B; /* Цвет текста */
+}
+.play-button a {
+    color: white; /* Цвет текста ссылки внутри кнопки */
+    cursor: url('img/cursor.png')16 16, auto;
+    text-decoration: none; /* Убирает подчеркивание для ссылки внутри кнопки */
+}
+
+.play-button:hover a {
+    color: white; /* Цвет текста ссылки внутри кнопки при наведении */
+}
+a {
+    color: black; 
+}
+.play-button:hover {
+    background-color: blue; /* Цвет при наведении */
+}
+
+
+.text-left-bottom, .text-right-bottom {
+    
+    position: fixed; /* Использование 'fixed' для позиционирования относительно окна браузера */
+    bottom: 3px; /* Отступ от нижнего края */
+    font-size: 12px;   
+    color: #000000;
+}
+
+.text-left-bottom {
+    left: 15px;
+}
+
+.text-right-bottom {
+    right: 15px;
+}

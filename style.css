@@ -1,0 +1,90 @@
+@font-face {
+    font-family: 'PP Mori'; /* Используйте уникальное имя для вашего шрифта */
+    src: url('fonts/PPMori-SemiBold.woff') format('woff'); /* Современные браузеры */
+      резерва */
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, html {
+    font-family: 'PP Mori', sans-serif; 
+    cursor: url('img/cursor.png')16 16, auto;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #E4E4E4; /* Цвет фона страницы */
+    letter-spacing: 0.3px
+    
+}
+
+.content {
+    text-align: center;
+    width: 100%; /* Убедитесь, что контейнер занимает всю ширину */
+    max-width: 1200px; /* Можно ограничить максимальную ширину, если нужно */
+    margin: 0 auto;
+    /* Убедитесь, что .content занимает необходимое пространство, но не весь экран,
+       чтобы оставить место для текста внизу */
+}
+
+.main-image {
+    max-width: 90%;
+    height: auto;
+}
+
+.play-button {
+    font-family: 'PP Mori', sans-serif;
+    cursor: url('img/cursor.png')16 16, auto;
+    background-color: #FF2A2A;
+    border-radius: 36px;
+    color: white;
+    border: none;
+    padding-top: 18px;
+    padding-bottom: 15px;
+    padding-left:  40px;
+    padding-right:  40px;
+    text-align: center;
+    text-decoration: none;
+    display: block; /* Измените на block, чтобы разрешить margin auto */
+    margin: 20px auto;
+    font-size: 26px;
+    margin-top: 50px; 
+    letter-spacing: 2px;
+    transition: background-color 0.3s;
+        
+}
+.play-button a {
+    color: white; /* Цвет текста ссылки внутри кнопки */
+    cursor: url('img/cursor.png')16 16, auto;
+    text-decoration: none; /* Убирает подчеркивание для ссылки внутри кнопки */
+}
+
+.play-button:hover a {
+    color: white; /* Цвет текста ссылки внутри кнопки при наведении */
+}
+a {
+    color: black; 
+}
+.play-button:hover {
+    background-color: #00A3FF; /* Цвет при наведении */
+}
+
+
+.text-left-bottom, .text-right-bottom {
+    
+    position: fixed; /* Использование 'fixed' для позиционирования относительно окна браузера */
+    bottom: 3px; /* Отступ от нижнего края */
+    font-size: 12px;   
+    color: #000000;
+}
+
+.text-left-bottom {
+    left: 15px;
+}
+
+.text-right-bottom {
+    right: 15px;
+}
