@@ -3,69 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p5.js Video from Camera with Selection</title>
+  <title>Камера и квадрат</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.dom.js"></script>
 </head>
 <body>
   <script>
-    let video;
-    let selectedImages = [];
-    let selecting = false;
-    let startX, startY, endX, endY;
+    let capture;
+    let img;
+    let startX, startY;
+    let endX, endY;
+    let isDrawing = false;
 
     function setup() {
-      createCanvas(windowWidth, windowHeight);
-      video = createCapture(VIDEO);
-      video.size(windowWidth, windowHeight);
-      video.hide();
+      let canvas = createCanvas(640, 480);
+      canvas.parent('canvas-container'); // Чтобы разместить канву в определенном контейнере
+      capture = createCapture(VIDEO);
+      capture.size(640, 480);
+      capture.hide(); // Скрыть видео с камеры
+      img = createImage(640, 480);
     }
 
     function draw() {
-      background(220);
-      image(video, 0, 0, width, height);
+      background(255);
+      image(capture, 0, 0, width, height); // Показываем видео с камеры на фоне
       
-      // Draw the selected images
-      for (let img of selectedImages) {
-        image(img.image, img.x, img.y);
-      }
-      
-      // Draw the selection rectangle if selecting
-      if (selecting) {
-        noFill();
+      if (isDrawing) {
         stroke(255, 0, 0);
-        rect(startX, startY, mouseX - startX, mouseY - startY);
+        noFill();
+        rect(startX, startY, mouseX - startX, mouseY - startY); // Рисуем прямоугольную область
       }
     }
 
     function mousePressed() {
       startX = mouseX;
       startY = mouseY;
-      selecting = true;
+      isDrawing = true;
     }
 
     function mouseReleased() {
-      selecting = false;
       endX = mouseX;
       endY = mouseY;
+      isDrawing = false;
+      
+      // Сохраняем изображение в области, выделенной пользователем
       let w = endX - startX;
       let h = endY - startY;
-
-      // Create a copy of the selected area from the video
-      let selectedImage = createImage(w, h);
-      selectedImage.copy(video, startX, startY, w, h, 0, 0, w, h);
-      selectedImages.push({ image: selectedImage, x: startX, y: startY });
-    }
-
-    function touchStarted() {
-      mousePressed();
-      return false;
-    }
-
-    function touchEnded() {
-      mouseReleased();
-      return false;
+      img.copy(capture, startX, startY, w, h, 0, 0, w, h);
+      image(img, startX, startY, w, h); // Показываем сохраненное изображение на экране
     }
   </script>
+  <div id="canvas-container"></div> <!-- Контейнер для размещения канвы -->
 </body>
 </html>
