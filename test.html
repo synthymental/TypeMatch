@@ -85,16 +85,12 @@
           facingMode: usingFrontCamera ? "user" : "environment" // "environment" для задней камеры, "user" для фронтальной
         }
       };
-      removeVideo(); // Удаляем предыдущий захват видео, если он был
-      video = createCapture(constraints);
-      video.hide();
-    }
-
-    function removeVideo() {
       if (video) {
         video.stop();
-        video.remove();
+        video = null;
       }
+      video = createCapture(constraints);
+      video.hide();
     }
   </script>
 </body>
