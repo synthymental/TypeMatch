@@ -22,7 +22,7 @@
     }
 
     function draw() {
-      //background(220);
+      background(220);
       image(video, 0, 0, width, height);
       
       // Draw the selected images
@@ -51,7 +51,7 @@
       let w = endX - startX;
       let h = endY - startY;
 
-      // Capture the selected area from the video
+      // Create a copy of the selected area from the video
       let selectedImage = createImage(w, h);
       selectedImage.copy(video, startX, startY, w, h, 0, 0, w, h);
       selectedImages.push({ image: selectedImage, x: startX, y: startY });
