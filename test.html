@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>p5.js Video from Camera</title>
+  <title>p5.js Video from Camera with Selection</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.dom.js"></script>
 </head>
 <body>
   <script>
     let video;
+    let selectedImages = [];
+    let selecting = false;
+    let startX, startY, endX, endY;
 
     function setup() {
       createCanvas(windowWidth, windowHeight);
@@ -21,6 +24,47 @@
     function draw() {
       background(220);
       image(video, 0, 0, width, height);
+      
+      // Draw the selected images
+      for (let img of selectedImages) {
+        image(img.image, img.x, img.y);
+      }
+      
+      // Draw the selection rectangle if selecting
+      if (selecting) {
+        noFill();
+        stroke(255, 0, 0);
+        rect(startX, startY, mouseX - startX, mouseY - startY);
+      }
+    }
+
+    function mousePressed() {
+      startX = mouseX;
+      startY = mouseY;
+      selecting = true;
+    }
+
+    function mouseReleased() {
+      selecting = false;
+      endX = mouseX;
+      endY = mouseY;
+      let w = endX - startX;
+      let h = endY - startY;
+
+      // Capture the selected area from the video
+      let selectedImage = createImage(w, h);
+      selectedImage.copy(video, startX, startY, w, h, 0, 0, w, h);
+      selectedImages.push({ image: selectedImage, x: startX, y: startY });
+    }
+
+    function touchStarted() {
+      mousePressed();
+      return false;
+    }
+
+    function touchEnded() {
+      mouseReleased();
+      return false;
     }
   </script>
 </body>
