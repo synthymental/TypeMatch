@@ -9,48 +9,49 @@
 </head>
 <body>
   <script>
-    let capture;
     let img;
-    let startX, startY;
-    let endX, endY;
-    let isDrawing = false;
+let isDrawing = false;
+let startX, startY;
+let endX, endY;
+let capture;
 
-    function setup() {
-      createCanvas(windowWidth, windowHeight);
-      capture = createCapture(VIDEO);
-      capture.size(windowWidth, windowHeight);
-      capture.hide(); // Скрыть видео с камеры
-      img = createImage(windowWidth, windowHeight);
-    }
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  capture = createCapture(VIDEO);
+  capture.size(windowWidth, windowHeight);
+  capture.hide(); // Скрыть видео с камеры
+  img = createImage(windowWidth, windowHeight);
+}
 
-    function draw() {
-      background(255);
-      image(capture, 0, 0, width, height); // Показываем видео с камеры на фоне
-      
-      if (isDrawing) {
-        stroke(255, 0, 0);
-        noFill();
-        rect(startX, startY, mouseX - startX, mouseY - startY); // Рисуем прямоугольную область
-      }
-    }
+function draw() {
+  background(255);
+  image(capture, 0, 0, width, height); // Показываем видео с камеры на фоне
+  
+  if (isDrawing) {
+    stroke(255, 0, 0);
+    noFill();
+    rect(startX, startY, mouseX - startX, mouseY - startY); // Рисуем прямоугольную область
+  }
+}
 
-    function mousePressed() {
-      startX = mouseX;
-      startY = mouseY;
-      isDrawing = true;
-    }
+function mousePressed() {
+  startX = mouseX;
+  startY = mouseY;
+  isDrawing = true;
+}
 
-    function mouseReleased() {
-      endX = mouseX;
-      endY = mouseY;
-      isDrawing = false;
-      
-      // Сохраняем изображение в области, выделенной пользователем
-      let w = endX - startX;
-      let h = endY - startY;
-      img.copy(capture, startX, startY, w, h, 0, 0, w, h);
-      image(img, startX, startY, w, h); // Показываем сохраненное изображение на экране
-    }
+function mouseReleased() {
+  endX = mouseX;
+  endY = mouseY;
+  isDrawing = false;
+  
+  // Сохраняем изображение в области, выделенной пользователем
+  let w = endX - startX;
+  let h = endY - startY;
+  img.copy(capture, startX, startY, w, h, 0, 0, w, h);
+  image(img, startX, startY, w, h); // Показываем сохраненное изображение на экране
+}
+
   </script>
 </body>
 </html>
