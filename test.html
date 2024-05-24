@@ -18,15 +18,19 @@
 
     function setup() {
       createCanvas(windowWidth, windowHeight);
-      toggleCamera(); // Для начала инициализируем камеру
+      let constraints = {
+        video: {
+          facingMode: usingFrontCamera ? "environment" : "user" // "environment" для задней камеры, "user" для фронтальной
+        }
+      };
+      video = createCapture(constraints);
+      video.hide();
       document.getElementById("toggleCamera").addEventListener("click", toggleCamera);
     }
 
     function draw() {
       background(220);
-      if (video) {
-        image(video, 0, 0, video.width, video.height);
-      }
+      image(video, 0, 0, video.width, video.height);
       
       // Draw the selected images
       for (let img of selectedImages) {
@@ -78,23 +82,16 @@
       return false;
     }
 
-    async function toggleCamera() {
+    function toggleCamera() {
       usingFrontCamera = !usingFrontCamera;
-      const constraints = {
+      let constraints = {
         video: {
-          facingMode: usingFrontCamera ? "user" : "environment"
+          facingMode: usingFrontCamera ? "environment" : "user" // "environment" для задней камеры, "user" для фронтальной
         }
       };
-      if (video) {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        const track = stream.getVideoTracks()[0];
-        video.srcObject.getVideoTracks()[0].stop();
-        video.srcObject.removeTrack(video.srcObject.getVideoTracks()[0]);
-        video.srcObject.addTrack(track);
-      } else {
-        video = createCapture(constraints);
-        video.hide();
-      }
+      video.remove();
+      video = createCapture(constraints);
+      video.hide();
     }
   </script>
 </body>
