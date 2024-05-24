@@ -16,8 +16,14 @@
 
     function setup() {
       createCanvas(windowWidth, windowHeight);
-      video = createCapture(VIDEO);
-      //video.size(windowWidth, windowHeight);
+      let constraints = {
+        video: {
+          facingMode: {
+            exact: "environment" // "environment" указывает на заднюю камеру, "user" на фронтальную
+          }
+        }
+      };
+      video = createCapture(constraints);
       video.hide();
     }
 
