@@ -10,7 +10,7 @@
 <body>
   <script>
     let video;
-    let selectedImages = [];
+    let selectedGraphic;
     let selecting = false;
     let startX, startY, endX, endY;
 
@@ -19,16 +19,15 @@
       video = createCapture(VIDEO);
       video.size(windowWidth, windowHeight);
       video.hide();
+      selectedGraphic = createGraphics(windowWidth, windowHeight);
     }
 
     function draw() {
       background(220);
       image(video, 0, 0, width, height);
       
-      // Draw the selected images
-      for (let img of selectedImages) {
-        image(img.graphic, img.x, img.y, img.width, img.height);
-      }
+      // Draw the selected image
+      image(selectedGraphic, 0, 0);
       
       // Draw the selection rectangle if selecting
       if (selecting) {
@@ -56,12 +55,9 @@
         let sx = min(startX, endX);
         let sy = min(startY, endY);
 
-        // Create a new graphic buffer for the selected area
-        let selectedGraphic = createGraphics(w, h);
+        // Update the existing graphic buffer for the selected area
+        selectedGraphic.clear();
         selectedGraphic.copy(video, sx, sy, w, h, 0, 0, w, h);
-
-        // Save the graphic buffer and its position
-        selectedImages.push({ graphic: selectedGraphic, x: sx, y: sy, width: w, height: h });
       }
     }
 
