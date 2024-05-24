@@ -3,55 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Камера и квадрат</title>
+  <title>p5.js Video from Camera with Selection</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.dom.js"></script>
 </head>
 <body>
   <script>
-    let img;
-let isDrawing = false;
-let startX, startY;
-let endX, endY;
-let capture;
+    let video;
+    let selectedImages = [];
+    let selecting = false;
+    let startX, startY, endX, endY;
 
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-  capture = createCapture(VIDEO);
-  capture.size(windowWidth, windowHeight);
-  capture.hide(); // Скрыть видео с камеры
-  img = createImage(windowWidth, windowHeight);
-}
+    function setup() {
+      createCanvas(windowWidth, windowHeight);
+      video = createCapture(VIDEO);
+      video.size(windowWidth, windowHeight);
+      video.hide();
+    }
 
-function draw() {
-  background(255);
-  image(capture, 0, 0, width, height); // Показываем видео с камеры на фоне
-  
-  if (isDrawing) {
-    stroke(255, 0, 0);
-    noFill();
-    rect(startX, startY, mouseX - startX, mouseY - startY); // Рисуем прямоугольную область
-  }
-}
+    function draw() {
+      background(220);
+      image(video, 0, 0, width, height);
+      
+      // Draw the selected images
+      for (let img of selectedImages) {
+        image(img.graphic, img.x, img.y);
+      }
+      
+      // Draw the selection rectangle if selecting
+      if (selecting) {
+        noFill();
+        stroke(255, 0, 0);
+        rect(startX, startY, mouseX - startX, mouseY - startY);
+      }
+    }
 
-function mousePressed() {
-  startX = mouseX;
-  startY = mouseY;
-  isDrawing = true;
-}
+    function mousePressed() {
+      startX = mouseX;
+      startY = mouseY;
+      selecting = true;
+    }
 
-function mouseReleased() {
-  endX = mouseX;
-  endY = mouseY;
-  isDrawing = false;
-  
-  // Сохраняем изображение в области, выделенной пользователем
-  let w = endX - startX;
-  let h = endY - startY;
-  img.copy(capture, startX, startY, w, h, 0, 0, w, h);
-  image(img, startX, startY, w, h); // Показываем сохраненное изображение на экране
-}
+    function mouseReleased() {
+      if (selecting) {
+        selecting = false;
+        endX = mouseX;
+        endY = mouseY;
+        let w = abs(endX - startX);
+        let h = abs(endY - startY);
 
+        // Adjust startX and startY if the user drew the rectangle from bottom-right to top-left
+        let sx = min(startX, endX);
+        let sy = min(startY, endY);
+
+        // Create a new graphic buffer for the selected area
+        let selectedGraphic = createGraphics(w, h);
+        selectedGraphic.image(video, 0, 0, w, h, sx, sy, w, h);
+
+        // Save the graphic buffer and its position
+        selectedImages.push({ graphic: selectedGraphic, x: sx, y: sy });
+      }
+    }
+
+    function touchStarted() {
+      mousePressed();
+      return false;
+    }
+
+    function touchEnded() {
+      mouseReleased();
+      return false;
+    }
   </script>
 </body>
 </html>
