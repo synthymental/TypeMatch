@@ -6,7 +6,7 @@
   <title>Камера и квадрат</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 </head>
-<body style="margin: 0;">
+<body>
   <script>
     let capture;
     let img;
@@ -18,13 +18,13 @@
       createCanvas(windowWidth, windowHeight);
       capture = createCapture(VIDEO);
       capture.size(windowWidth, windowHeight);
-      capture.hide(); // Скрыть видео с камеры
+      //capture.hide(); // Скрыть видео с камеры
       img = createImage(windowWidth, windowHeight);
     }
 
     function draw() {
-      background(255);
-      image(capture, 0, 0, width, height); // Показываем видео с камеры на фоне
+      //background(255);
+      //image(capture, 0, 0, width, height); // Показываем видео с камеры на фоне
       
       if (isDrawing) {
         stroke(255, 0, 0);
