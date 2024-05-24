@@ -10,7 +10,7 @@
 <body>
   <script>
     let video;
-    let selectedGraphic;
+    let selectedImages = [];
     let selecting = false;
     let startX, startY, endX, endY;
 
@@ -19,15 +19,16 @@
       video = createCapture(VIDEO);
       video.size(windowWidth, windowHeight);
       video.hide();
-      selectedGraphic = createGraphics(windowWidth, windowHeight);
     }
 
     function draw() {
       background(220);
       image(video, 0, 0, width, height);
       
-      // Draw the selected image
-      image(selectedGraphic, 0, 0);
+      // Draw the selected images
+      for (let img of selectedImages) {
+        image(img.image, img.x, img.y);
+      }
       
       // Draw the selection rectangle if selecting
       if (selecting) {
@@ -44,21 +45,16 @@
     }
 
     function mouseReleased() {
-      if (selecting) {
-        selecting = false;
-        endX = mouseX;
-        endY = mouseY;
-        let w = abs(endX - startX);
-        let h = abs(endY - startY);
+      selecting = false;
+      endX = mouseX;
+      endY = mouseY;
+      let w = endX - startX;
+      let h = endY - startY;
 
-        // Adjust startX and startY if the user drew the rectangle from bottom-right to top-left
-        let sx = min(startX, endX);
-        let sy = min(startY, endY);
-
-        // Update the existing graphic buffer for the selected area
-        selectedGraphic.clear();
-        selectedGraphic.copy(video, sx, sy, w, h, 0, 0, w, h);
-      }
+      // Capture the selected area from the video
+      let selectedImage = createImage(w, h);
+      selectedImage.copy(video, startX, startY, w, h, 0, 0, w, h);
+      selectedImages.push({ image: selectedImage, x: startX, y: startY });
     }
 
     function touchStarted() {
