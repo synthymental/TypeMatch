@@ -13,18 +13,20 @@
     let selectedImages = [];
     let selecting = false;
     let startX, startY, endX, endY;
+    let pg;
 
     function setup() {
       createCanvas(windowWidth, windowHeight);
       video = createCapture(VIDEO);
       video.size(windowWidth, windowHeight);
       video.hide();
+      pg = createGraphics(windowWidth, windowHeight);
     }
 
     function draw() {
       background(220);
       image(video, 0, 0, width, height);
-      
+
       // Draw the selected images
       for (let img of selectedImages) {
         image(img.image, img.x, img.y);
@@ -57,8 +59,9 @@
         let sy = min(startY, endY);
 
         // Create a copy of the selected area from the video
+        pg.copy(video, sx, sy, w, h, 0, 0, w, h);
         let selectedImage = createImage(w, h);
-        selectedImage.copy(video, sx, sy, w, h, 0, 0, w, h);
+        selectedImage.copy(pg, 0, 0, w, h, 0, 0, w, h);
         selectedImages.push({ image: selectedImage, x: sx, y: sy });
       }
     }
