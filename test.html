@@ -18,19 +18,15 @@
 
     function setup() {
       createCanvas(windowWidth, windowHeight);
-      let constraints = {
-        video: {
-          facingMode: usingFrontCamera ? "user" : "environment" // "environment" для задней камеры, "user" для фронтальной
-        }
-      };
-      video = createCapture(constraints);
-      video.hide();
+      toggleCamera(); // Для начала инициализируем камеру
       document.getElementById("toggleCamera").addEventListener("click", toggleCamera);
     }
 
     function draw() {
       background(220);
-      image(video, 0, 0, video.width, video.height);
+      if (video) {
+        image(video, 0, 0, video.width, video.height);
+      }
       
       // Draw the selected images
       for (let img of selectedImages) {
@@ -89,9 +85,16 @@
           facingMode: usingFrontCamera ? "user" : "environment" // "environment" для задней камеры, "user" для фронтальной
         }
       };
-      video.remove();
+      removeVideo(); // Удаляем предыдущий захват видео, если он был
       video = createCapture(constraints);
       video.hide();
+    }
+
+    function removeVideo() {
+      if (video) {
+        video.stop();
+        video.remove();
+      }
     }
   </script>
 </body>
