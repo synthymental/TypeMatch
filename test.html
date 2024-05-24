@@ -10,6 +10,13 @@
 <body>
   <script>
     let video;
+    let constraints = {
+    video: {
+      facingMode: {
+        exact: "environment" // "environment" указывает на заднюю камеру, "user" на фронтальную
+      }
+    }
+  };
     let selectedImages = [];
     let selecting = false;
     let startX, startY, endX, endY;
