@@ -27,7 +27,7 @@
       image(video, 0, 0, width, height);
       
       // Draw the selected image
-      image(selectedGraphic, 0, 0);
+      image(selectedGraphic, 0, 0, windowWidth, windowHeight);
       
       // Draw the selection rectangle if selecting
       if (selecting) {
@@ -57,7 +57,12 @@
 
         // Update the existing graphic buffer for the selected area
         selectedGraphic.clear();
-        selectedGraphic.copy(video, sx, sy, w, h, 0, 0, w, h);
+        selectedGraphic.image(video, 0, 0, windowWidth, windowHeight); // Draw video on the graphic buffer
+        selectedGraphic.loadPixels(); // Load pixels for manipulation
+        let videoPixels = selectedGraphic.get(sx, sy, w, h); // Get the selected pixels from video
+        selectedGraphic.updatePixels(); // Update pixels after manipulation
+        selectedGraphic.clear(); // Clear the buffer
+        selectedGraphic.image(videoPixels, 0, 0, w, h, sx, sy, w, h); // Draw selected pixels on the buffer
       }
     }
 
