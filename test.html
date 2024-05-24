@@ -62,7 +62,7 @@
         let videoPixels = selectedGraphic.get(sx, sy, w, h); // Get the selected pixels from video
         selectedGraphic.updatePixels(); // Update pixels after manipulation
         selectedGraphic.clear(); // Clear the buffer
-        selectedGraphic.image(videoPixels, 0, 0, w, h, sx, sy, w, h); // Draw selected pixels on the buffer
+        selectedGraphic.image(videoPixels, sx, sy, w, h, sx, sy, w, h); // Draw selected pixels on the buffer
       }
     }
 
