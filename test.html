@@ -19,7 +19,7 @@
       video = createCapture(VIDEO);
       video.size(1000, 1000);
       video.hide();
-      selectedGraphic = createGraphics(windowWidth, windowHeight);
+      selectedGraphic = createGraphics(1000, 1000);
     }
 
     function draw() {
@@ -27,7 +27,7 @@
       image(video, 0, 0, width, height);
       
       // Draw the selected image
-      image(selectedGraphic, 0, 0, windowWidth, windowHeight);
+      image(selectedGraphic, 0, 0, 1000, 1000);
       
       // Draw the selection rectangle if selecting
       if (selecting) {
