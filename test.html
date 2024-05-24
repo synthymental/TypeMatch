@@ -15,19 +15,19 @@
     let startX, startY, endX, endY;
 
     function setup() {
-      createCanvas(1000, 1000);
+      createCanvas(windowWidth, windowHeight);
       video = createCapture(VIDEO);
-      video.size(1000, 1000);
+      video.size(windowWidth, windowHeight);
       video.hide();
-      selectedGraphic = createGraphics(1000, 1000);
+      selectedGraphic = createGraphics(windowWidth, windowHeight);
     }
 
     function draw() {
       background(220);
-      image(video, 0, 0, 1000, 1000);
+      image(video, 0, 0, width, height);
       
       // Draw the selected image
-      image(selectedGraphic, 0, 0, 1000, 1000);
+      image(selectedGraphic, 0, 0);
       
       // Draw the selection rectangle if selecting
       if (selecting) {
@@ -57,12 +57,7 @@
 
         // Update the existing graphic buffer for the selected area
         selectedGraphic.clear();
-        selectedGraphic.image(video, 0, 0, windowWidth, windowHeight); // Draw video on the graphic buffer
-        selectedGraphic.loadPixels(); // Load pixels for manipulation
-        let videoPixels = selectedGraphic.get(sx, sy, w, h); // Get the selected pixels from video
-        selectedGraphic.updatePixels(); // Update pixels after manipulation
-        selectedGraphic.clear(); // Clear the buffer
-        selectedGraphic.image(videoPixels, 0, 0, w, h, sx, sy, endX, endY); // Draw selected pixels on the buffer
+        selectedGraphic.copy(video, sx, sy, w, h, 0, 0, w, h);
       }
     }
 
