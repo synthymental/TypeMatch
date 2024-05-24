@@ -8,23 +8,24 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.dom.js"></script>
 </head>
 <body>
+  <button id="toggleCamera">Toggle Camera</button>
   <script>
     let video;
     let selectedImages = [];
     let selecting = false;
     let startX, startY, endX, endY;
+    let usingFrontCamera = false;
 
     function setup() {
       createCanvas(windowWidth, windowHeight);
       let constraints = {
         video: {
-          facingMode: {
-            exact: "environment" // "environment" указывает на заднюю камеру, "user" на фронтальную
-          }
+          facingMode: usingFrontCamera ? "user" : "environment" // "environment" для задней камеры, "user" для фронтальной
         }
       };
       video = createCapture(constraints);
       video.hide();
+      document.getElementById("toggleCamera").addEventListener("click", toggleCamera);
     }
 
     function draw() {
@@ -79,6 +80,18 @@
     function touchEnded() {
       mouseReleased();
       return false;
+    }
+
+    function toggleCamera() {
+      usingFrontCamera = !usingFrontCamera;
+      let constraints = {
+        video: {
+          facingMode: usingFrontCamera ? "user" : "environment" // "environment" для задней камеры, "user" для фронтальной
+        }
+      };
+      video.remove();
+      video = createCapture(constraints);
+      video.hide();
     }
   </script>
 </body>
