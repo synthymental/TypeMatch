@@ -78,19 +78,23 @@
       return false;
     }
 
-    function toggleCamera() {
+    async function toggleCamera() {
       usingFrontCamera = !usingFrontCamera;
-      let constraints = {
+      const constraints = {
         video: {
-          facingMode: usingFrontCamera ? "user" : "environment" // "environment" для задней камеры, "user" для фронтальной
+          facingMode: usingFrontCamera ? "user" : "environment"
         }
       };
       if (video) {
-        video.stop();
-        video = null;
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        const track = stream.getVideoTracks()[0];
+        video.srcObject.getVideoTracks()[0].stop();
+        video.srcObject.removeTrack(video.srcObject.getVideoTracks()[0]);
+        video.srcObject.addTrack(track);
+      } else {
+        video = createCapture(constraints);
+        video.hide();
       }
-      video = createCapture(constraints);
-      video.hide();
     }
   </script>
 </body>
