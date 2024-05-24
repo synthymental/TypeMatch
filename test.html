@@ -27,7 +27,7 @@
       
       // Draw the selected images
       for (let img of selectedImages) {
-        image(img.image, img.x, img.y);
+        image(img.graphic, img.x, img.y);
       }
       
       // Draw the selection rectangle if selecting
@@ -56,22 +56,10 @@
         let sx = min(startX, endX);
         let sy = min(startY, endY);
 
-        // Create a copy of the selected area from the video
-        video.loadPixels();
-        let selectedImage = createImage(w, h);
-        selectedImage.loadPixels();
-        for (let y = 0; y < h; y++) {
-          for (let x = 0; x < w; x++) {
-            let srcIndex = ((sy + y) * video.width + (sx + x)) * 4;
-            let dstIndex = (y * w + x) * 4;
-            selectedImage.pixels[dstIndex] = video.pixels[srcIndex];
-            selectedImage.pixels[dstIndex + 1] = video.pixels[srcIndex + 1];
-            selectedImage.pixels[dstIndex + 2] = video.pixels[srcIndex + 2];
-            selectedImage.pixels[dstIndex + 3] = video.pixels[srcIndex + 3];
-          }
-        }
-        selectedImage.updatePixels();
-        selectedImages.push({ image: selectedImage, x: sx, y: sy });
+        // Create a new graphic buffer for the selected area
+        let selectedGraphic = createGraphics(w, h);
+        selectedGraphic.image(video, 0, 0, w, h, sx, sy, w, h);
+        selectedImages.push({ graphic: selectedGraphic, x: sx, y: sy });
       }
     }
 
