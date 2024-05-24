@@ -27,7 +27,7 @@
       
       // Draw the selected images
       for (let img of selectedImages) {
-        image(img.graphic, img.x, img.y);
+        image(img.graphic, img.x, img.y, img.width, img.height);
       }
       
       // Draw the selection rectangle if selecting
@@ -58,10 +58,10 @@
 
         // Create a new graphic buffer for the selected area
         let selectedGraphic = createGraphics(w, h);
-        selectedGraphic.image(video, 0, 0, w, h, sx, sy, w, h);
+        selectedGraphic.copy(video, sx, sy, w, h, 0, 0, w, h);
 
         // Save the graphic buffer and its position
-        selectedImages.push({ graphic: selectedGraphic, x: sx, y: sy });
+        selectedImages.push({ graphic: selectedGraphic, x: sx, y: sy, width: w, height: h });
       }
     }
 
