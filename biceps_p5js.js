@@ -1,23 +1,82 @@
+let isDrawing = false;
+
+
 let cols = 50; // Количество столбцов
 let rows = 50; // Количество строк
 let cellSize = 50; // Размер клетки (1000 / 10)
 let grid = Array.from({ length: cols }, () => Array.from({ length: rows }, () => 0)); // Массив для хранения состояния клеток
 let bicepsChance = 3;
 
+
+let btnGrid;
+let opacity=0;
+let btnGridCount=0;
+
+let btnClear;
+let btnRandom;
+let btnPencil;
+let btnEraser;
+let btnSave;
+
+let slider;
+
 function setup() {
-  createCanvas(1000, 1000); // Установка размера окна 1000x1000
-  frameRate(30);
+  createCanvas(2000, 1000); // Установка размера окна 1000x1000
+  frameRate(60);
+
+  btnRandom = createButton('wtf');
+  btnRandom.position(15, 80);
+  btnRandom.size(70,30);
+  btnRandom.mousePressed(btnClick);
+
+  btnPencil = createButton('pencil');
+  btnPencil.position(90, 80);
+  btnPencil.size(70,30);
+  btnPencil.mousePressed(btnClick);
+
+  btnEraser = createButton('eraser');
+  btnEraser.position(165, 80);
+  btnEraser.size(70,30);
+  btnEraser.mousePressed(btnClick);
+  
+  btnSave = createButton('save');
+  btnSave.position(15, 120);
+  btnSave.size(220,30);
+  btnSave.mousePressed(btnSaver);
+
+  btnGrid = createButton('grid');
+  btnGrid.position(15, 40);
+  btnGrid.size(70,30);
+  btnGrid.mousePressed(btnClick);
+  
+  btnClear = createButton('clear');
+  btnClear.position(90, 40);
+  btnClear.size(70,30);
+  btnClear.mousePressed(clearGrid);
+  
+  slider = createSlider(0, 10,3);
+  slider.position(10, 10);
+  slider.size(150);
+  
+  
 }
 
 function draw() {
-  background(255); // Очистка фона
-  stroke(100);
-  strokeWeight(5);
+  background(255);
+
+  fill(0);
+  textSize(20);
+  //text(bicepsChance+"  ",170,27);
+  noFill();
+
+  stroke(100,opacity);
+  strokeWeight(1);
   rect(0,0,width,height);
   fill(0);
-  noStroke();
-  textSize(14);
-  text(`bicepsChance = ${bicepsChance} +/-`, 10, 30);
+ // noStroke();
+  bicepsChance = slider.value();
+  // textSize(14);
+  // text(`bicepsChance = ${bicepsChance} +/-`, 10, 30);
 
   // Рисуем сетку
   for (let x = 0; x < cols; x++) {
@@ -48,18 +107,42 @@ function draw() {
       }
 
       // Рисуем клетку
-      noStroke(); // Цвет рамки клетки
+      //noStroke(); // Цвет рамки клетки
       rect(cellX, cellY, cellSize, cellSize);
     }
   }
+  if (isDrawing) {
+    shapes(); // Рисуем, если мышь нажата
+  }
+}
+function btnClick(){
+  if(btnGridCount===0){
+  opacity = 255;
+  btnGridCount =1;
+  } else{
+    opacity = 0;
+    btnGridCount =0;
+  }
 }
 
-function mouseDragged() {
-  shapes();
+function btnSaver(){
+  textSize(0);
+  saveCanvas('Arnold', 'png');
 }
 
-function mouseClicked() {
-  shapes();
+function clearGrid(){
+  for (let x = 0; x < cols; x++) {
+    for (let y = 0; y < rows; y++) {
+      grid[x][y] = 0;
+    }
+  }
+}
+function mousePressed() {
+  isDrawing = true; // Устанавливаем isDrawing в true при нажатии мыши
+}
+
+function mouseReleased() {
+  isDrawing = false; // Останавливаем рисование при отпускании мыши
 }
 
 function shapes() {
@@ -108,7 +191,7 @@ function shapes() {
   }
 }
 
-// Функция для рисования треугольников
+// Формы
 function drawTriangle(x, y, size) {
   triangle(
     x + size, y, // Верхняя точка треугольника
@@ -142,6 +225,7 @@ function drawTriangle5(x, y, size) {
 }
 
 function drawHex(x, y, size) {
+  
   fill(0);
   beginShape();
   vertex(x, y);
