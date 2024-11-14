@@ -1,231 +1,194 @@
-let isDrawing = false;
+let bicepsChance = 5; // Вероятность рисования hex (в процентах)
 
-
-let cols = 50; // Количество столбцов
-let rows = 50; // Количество строк
-let cellSize = 50; // Размер клетки (1000 / 10)
-let grid = Array.from({ length: cols }, () => Array.from({ length: rows }, () => 0)); // Массив для хранения состояния клеток
-let bicepsChance = 3;
-
+let field;
+let hexField = []; // Массив для хранения координат hex
+let tileSize = 32;
+let cols, rows;
+let xPos, yPos;
 
 let btnGrid;
-let opacity=0;
-let btnGridCount=0;
+let opacity = 0;
+let btnGridCount = 0;
+let btnEraserCount = 0;
 
 let btnClear;
 let btnRandom;
 let btnPencil;
-let btnEraser;
+let btnErase;
 let btnSave;
 
-let slider;
+let colorF;
+let colorBG;
 
 function setup() {
-  createCanvas(2000, 1000); // Установка размера окна 1000x1000
+  createCanvas(windowWidth / 2, windowHeight - 80).parent(select('#cnv'));
   frameRate(60);
+  cols = 1 + floor(width / tileSize);
+  rows = 1 + floor(height / tileSize);
+  field = Array.from({ length: cols }, () => Array(rows).fill(0));
 
-  btnRandom = createButton('wtf');
-  btnRandom.position(15, 80);
-  btnRandom.size(70,30);
+  btnRandom = select('#rnd');
   btnRandom.mousePressed(btnClick);
 
-  btnPencil = createButton('pencil');
-  btnPencil.position(90, 80);
-  btnPencil.size(70,30);
-  btnPencil.mousePressed(btnClick);
+  btnPencil = select('#pencil');
+  btnPencil.mousePressed(btnPencilClick);
 
-  btnEraser = createButton('eraser');
-  btnEraser.position(165, 80);
-  btnEraser.size(70,30);
-  btnEraser.mousePressed(btnClick);
+  btnErase = select('#eraser');
+  btnErase.mousePressed(btnEraser);
   
-  btnSave = createButton('save');
-  btnSave.position(15, 120);
-  btnSave.size(220,30);
+  btnSave = select('#save');
   btnSave.mousePressed(btnSaver);
 
-  btnGrid = createButton('grid');
-  btnGrid.position(15, 40);
-  btnGrid.size(70,30);
+  btnGrid = select('#grid');
   btnGrid.mousePressed(btnClick);
   
-  btnClear = createButton('clear');
-  btnClear.position(90, 40);
-  btnClear.size(70,30);
+  btnClear = select('#clear');
   btnClear.mousePressed(clearGrid);
-  
-  slider = createSlider(0, 10,3);
-  slider.position(10, 10);
-  slider.size(150);
-  
-  
+
+  colorF = color('#000000');
+  colorBG = color('#ffffff');
+}
+
+function drawShape(v1, v2, v3, v4) {
+  beginShape();
+  vertex(v1.x, v1.y);
+  vertex(v2.x, v2.y);
+  vertex(v3.x, v3.y);
+  vertex(v4.x, v4.y);
+  endShape(CLOSE);
 }
 
 function draw() {
-  background(255);
 
-  fill(0);
-  textSize(20);
-  //text(bicepsChance+"  ",170,27);
-  noFill();
+  background(colorBG); // Очистка фона для обновления сетки
+  // fill(255,0,0);
+  // ellipse(mouseX,mouseY,tileSize,tileSize);
+  // Отрисовка hex-фигур из массива hexField
+  for (let hex of hexField) {
+    drawHex(hex.x, hex.y, tileSize);
+  }
 
-  stroke(100,opacity);
-  strokeWeight(1);
-  rect(0,0,width,height);
-  fill(0);
- // noStroke();
-  bicepsChance = slider.value();
-  // textSize(14);
-  // text(`bicepsChance = ${bicepsChance} +/-`, 10, 30);
-
-  // Рисуем сетку
-  for (let x = 0; x < cols; x++) {
-    for (let y = 0; y < rows; y++) {
-      let cellX = x * cellSize;
-      let cellY = y * cellSize;
-      fill(0);
-      // Проверяем состояние клетки и устанавливаем цвет
-      if (grid[x][y] === 1) {
-        // Если значение клетки 1, просто продолжаем
-      } else if (grid[x][y] === 2) {
-        drawTriangle(cellX, cellY, cellSize); // Рисуем треугольник в клетке
-        continue;
-      } else if (grid[x][y] === 3) {
-        drawTriangle3(cellX, cellY, cellSize); // Рисуем треугольник в клетке
-        continue;
-      } else if (grid[x][y] === 4) {
-        drawTriangle4(cellX, cellY, cellSize); // Рисуем треугольник в клетке
-        continue;
-      } else if (grid[x][y] === 5) {
-        drawTriangle5(cellX, cellY, cellSize); // Рисуем треугольник в клетке
-        continue;
-      } else if (grid[x][y] === 6) {
-        drawHex(cellX, cellY, cellSize); // Рисуем шестиугольник в клетке
-        continue;
+  for (let i = 0; i < cols - 1; i++) {
+    for (let j = 0; j < rows - 1; j++) {
+      let x = i * tileSize;
+      let y = j * tileSize;
+      noFill();
+      if (btnGridCount === 1) {
+        stroke(100);
       } else {
-        fill(255, 10); // Белый цвет для клеток со значением 0
+        noStroke();
+      }
+      rect(x, y, tileSize, tileSize);
+
+      let a = createVector(x, y);
+      let b = createVector(x + tileSize, y);
+      let c = createVector(x + tileSize, y + tileSize);
+      let d = createVector(x, y + tileSize);
+
+      let state = getState(
+        field[i][j],
+        field[i + 1][j],
+        field[i + 1][j + 1],
+        field[i][j + 1]
+      );
+      
+      noStroke();
+      fill(0);
+
+      // Проверка на нажатие мыши
+      if (mouseIsPressed) {
+        xPos = floor(mouseX / tileSize);
+        yPos = floor(mouseY / tileSize);
+
+        if (xPos >= 0 && xPos < cols && yPos >= 0 && yPos < rows) {
+          if (btnEraserCount === 1) {
+            // Режим стирания: удаляем hex-фигуры и обычные фигуры
+            hexField = hexField.filter(hex => dist(hex.x, hex.y, xPos * tileSize, yPos * tileSize) > tileSize / 2);
+
+            // Очистка обычных фигур из массива field
+            field[xPos][yPos] = 0;
+            field[xPos + 1][yPos] = 0;
+            field[xPos + 1][yPos + 1] = 0;
+            field[xPos][yPos + 1] = 0;
+
+          } else {
+            if (random(10) < bicepsChance) {
+              if (frameCount % 50 === 0) {
+                // Добавляем hex в массив
+                let hexX = xPos * tileSize;
+                let hexY = yPos * tileSize;
+                hexField.push({ x: hexX, y: hexY });
+              }
+            } else { // Если шанс не выполняется, заполняем обычный квадрат
+              field[xPos][yPos] = 1;
+              field[xPos + 1][yPos] = 1;
+              field[xPos + 1][yPos + 1] = 1;
+              field[xPos][yPos + 1] = 1;
+            }
+          }
+        }
+        document.getElementById('cpF').addEventListener('input', (event) => {
+          colorF = color(event.target.value);
+        });
+        document.getElementById('cpBG').addEventListener('input', (event) => {
+          colorBG = color(event.target.value);
+        });
       }
 
-      // Рисуем клетку
-      //noStroke(); // Цвет рамки клетки
-      rect(cellX, cellY, cellSize, cellSize);
+      // Отображение обычных форм, если hex не нарисован
+      switch (state) {
+        case 7:
+          drawShape(b, c, d, b);
+          break;
+        case 11:
+          drawShape(a, c, d, a);
+          break;
+        case 13:
+          drawShape(d, a, b, d);
+          break;
+        case 14:
+          drawShape(a, b, c, a);
+          break;
+        case 15:
+          drawShape(a, b, c, d);
+          break;
+      }
     }
-  }
-  if (isDrawing) {
-    shapes(); // Рисуем, если мышь нажата
-  }
-}
-function btnClick(){
-  if(btnGridCount===0){
-  opacity = 255;
-  btnGridCount =1;
-  } else{
-    opacity = 0;
-    btnGridCount =0;
   }
 }
 
-function btnSaver(){
+function getState(a, b, c, d) {
+  return a * 8 + b * 4 + c * 2 + d * 1;
+}
+
+function btnClick() {
+  btnGridCount = btnGridCount === 0 ? 1 : 0;
+}
+
+function btnPencilClick() {
+  btnEraserCount = 0; // Отключаем режим стирания при нажатии на кнопку pencil
+}
+
+function btnEraser() {
+  btnEraserCount = 1; // Включаем режим стирания при нажатии на кнопку eraser
+}
+
+function btnSaver() {
   textSize(0);
   saveCanvas('Arnold', 'png');
 }
 
-function clearGrid(){
+function clearGrid() {
+  // Обнуление массива field и hexField
   for (let x = 0; x < cols; x++) {
     for (let y = 0; y < rows; y++) {
-      grid[x][y] = 0;
+      field[x][y] = 0;
     }
   }
-}
-function mousePressed() {
-  isDrawing = true; // Устанавливаем isDrawing в true при нажатии мыши
-}
-
-function mouseReleased() {
-  isDrawing = false; // Останавливаем рисование при отпускании мыши
-}
-
-function shapes() {
-  // Определяем в какую клетку попала мышь
-  let x = Math.floor(mouseX / cellSize);
-  let y = Math.floor(mouseY / cellSize);
-
-  // Проверяем, что курсор в пределах сетки
-  if (x >= 0 && x < cols && y >= 0 && y < rows) {
-    // Меняем значение клетки на противоположное (0 становится 1, а 1 становится 0)
-    grid[x][y] = 1;
-
-    // Проверяем соседние клетки
-    let roll1 = Math.round(random(bicepsChance));
-    if (roll1 === 1 && x > 0 && y > 0 && grid[x - 1][y - 1] === 1) {
-      grid[x - 1][y] = 2;
-    } else if (roll1 === 2 && x > 0 && y > 0 && grid[x - 1][y - 1] === 1) {
-      grid[x][y - 1] = 3;
-    } else if (roll1 >= 3 && x > 0 && y > 0 && grid[x - 1][y - 1] === 1) {
-      grid[x][y] = 6;
-    }
-
-    if (roll1 === 1 && x < cols - 1 && y < rows - 1 && grid[x + 1][y + 1] === 1) {
-      grid[x + 1][y] = 3;
-    } else if (roll1 === 2 && x < cols - 1 && y < rows - 1 && grid[x + 1][y + 1] === 1) {
-      grid[x][y + 1] = 2;
-    } else if (roll1 >= 3 && x < cols - 1 && y < rows - 1 && grid[x + 1][y + 1] === 1) {
-      grid[x][y] = 6;
-    }
-
-    if (roll1 === 1 && x > 0 && y < rows - 1 && grid[x - 1][y + 1] === 1) {
-      grid[x - 1][y] = 4;
-    } else if (roll1 === 2 && x > 0 && y < rows - 1 && grid[x - 1][y + 1] === 1) {
-      grid[x][y + 1] = 5;
-    } else if (roll1 >= 3 && x > 0 && y < rows - 1 && grid[x - 1][y + 1] === 1) {
-      grid[x][y] = 6;
-    }
-
-    if (roll1 === 1 && x < cols - 1 && y > 0 && grid[x + 1][y - 1] === 1) {
-      grid[x + 1][y] = 5;
-    } else if (roll1 === 2 && x < cols - 1 && y > 0 && grid[x + 1][y - 1] === 1) {
-      grid[x][y - 1] = 4;
-    } else if (roll1 >= 3 && x < cols - 1 && y > 0 && grid[x + 1][y - 1] === 1) {
-      grid[x][y - 1] = 6;
-    }
-  }
-}
-
-// Формы
-function drawTriangle(x, y, size) {
-  triangle(
-    x + size, y, // Верхняя точка треугольника
-    x, y, // Левая нижняя точка треугольника
-    x + size, y + size // Правая нижняя точка треугольника
-  );
-}
-
-function drawTriangle3(x, y, size) {
-  triangle(
-    x, y + size, // Верхняя точка треугольника
-    x, y, // Левая нижняя точка треугольника
-    x + size, y + size // Правая нижняя точка треугольника
-  );
-}
-
-function drawTriangle4(x, y, size) {
-  triangle(
-    x + size, y, // Верхняя точка треугольника
-    x, y + size, // Левая нижняя точка треугольника
-    x + size, y + size // Правая нижняя точка треугольника
-  );
-}
-
-function drawTriangle5(x, y, size) {
-  triangle(
-    x, y, // Верхняя точка треугольника
-    x, y + size, // Левая нижняя точка треугольника
-    x + size, y // Правая нижняя точка треугольника
-  );
+  hexField = []; // Очистка массива hex
 }
 
 function drawHex(x, y, size) {
-  
   fill(0);
   beginShape();
   vertex(x, y);
