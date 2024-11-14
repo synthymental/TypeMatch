@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
+  <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
+  <script language="javascript" type="text/javascript" src="biceps_p5js.js"></script>
+  <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
+
+  <style>
+    body {
+      
+      
+   
+canvas {
+            border: 0.5px solid rgb(150, 150, 150); /* Обводка только для канваса */
+            display: block; /* Убираем лишние отступы */
+            margin: 0 auto;
+            margin-top: 40px; /* Если нужно, выравниваем по центру */
+        }
+
+
+
+      .btnRow1, .btnRow2, .btnRow3, .slider, .btnSave{
+    width: 100px; /* Фиксированная ширина */
+    height: 64px; /* Фиксированная высота */
+    padding: 0; /* Убираем padding, если он не нужен */
+    margin: 0px;
+    
+    border: 0.5px solid rgb(150, 150, 150);
+    background-color: white;
+    text-align: center; /* Центрируем текст */
+    line-height: 50px; /* Центрируем текст по вертикали, если высота 50px */
+}
+.btnRow1:hover, .btnRow2:hover, .btnSave:hover{
+    background-color: rgb(255, 31, 31);  /* Меняем цвет фона при наведении */
+    color: white;  /* Меняем цвет текста */
+}
+
+  .btnRow1, .btnRow2{
+    cursor: pointer;
+    width: 150px; /* Фиксированная ширина */
+    height: 64px; 
+  }
+  .slider{
+    width: 200px;
+    
+  }
+  
+  .btnRow3{
+    color:grey;
+    width: 75px; /* Фиксированная ширина */
+    height: 64px; 
+  }
+  .btnSave{
+    cursor: pointer;
+    width: 300px;
+    margin-top:16px;
+  }
+
+        .menu {
+    position: fixed;  /* Элемент фиксируется относительно окна браузера */
+    top: 40px;           /* Выравниваем по верхнему краю окна */
+    right: 5%;    /* Смещаем блок на 100 пикселей правее экрана */
+    width: 300px;     /* Пример ширины меню */
+    height: 300px;    /* Высота меню на весь экран */
+    border: 0.5px solid rgb(150, 150, 150);
+    background-color: rgb(255, 255, 255); /* Пример фона */
+    
+}
+      padding: 0;
+      
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="cnv"></div>
+  <div class="menu">
+  <button class="btnRow1" id="grid" onclick="selectButton(1)">grid</button><button class="btnRow1" id="clear" onclick="selectButton(2)">clear</button>
+
+  <button class="btnRow2" id="pencil" onclick="selectButton(2)">pencil</button><button class="btnRow2" id="eraser" onclick="selectButton(2)">eraser</button>
+  <button class="btnRow3" id="rnd" onclick="selectButton(1)">random</button><input type="range" class="slider" id="chance" min="10" max="200" value="50">
+  <input type="color" id="cpF" value="#000000"> <input type="color" id="cpBG" value="#ffffff">
+  <button class="btnSave" id="save" onclick="selectButton(2)">save</button>
+
+</body>
+</html>
