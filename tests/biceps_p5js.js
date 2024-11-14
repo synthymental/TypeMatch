@@ -127,12 +127,12 @@ function draw() {
             }
           }
         }
-        document.getElementById('cpF').addEventListener('input', (event) => {
-          colorF = color(event.target.value);
-        });
-        document.getElementById('cpBG').addEventListener('input', (event) => {
-          colorBG = color(event.target.value);
-        });
+        // document.getElementById('cpF').addEventListener('input', (event) => {
+        //   colorF = color(event.target.value);
+        // });
+        // document.getElementById('cpBG').addEventListener('input', (event) => {
+        //   colorBG = color(event.target.value);
+        // });
       }
 
       // Отображение обычных форм, если hex не нарисован
