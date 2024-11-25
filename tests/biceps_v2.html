@@ -7,15 +7,17 @@
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script language="javascript" type="text/javascript" src="libraries/p5.min.js"></script>
   <script language="javascript" type="text/javascript" src="biceps_p5js.js"></script>
+  <script src="https://unpkg.com/p5.js-svg@1.5.1"></script>
   <!-- OK, YOU CAN MAKE CHANGES BELOW THIS LINE AGAIN -->
 
   <style>
     body {
+      background-color: rgb(0, 0, 0);
+      overflow: hidden;
       
       
-   
 canvas {
-            border: 0.5px solid rgb(150, 150, 150); /* Обводка только для канваса */
+            border: 1.5px solid rgb(150, 150, 150); /* Обводка только для канваса */
             display: block; /* Убираем лишние отступы */
             margin: 0 auto;
             margin-top: 40px; /* Если нужно, выравниваем по центру */
@@ -23,7 +25,7 @@ canvas {
 
 
 
-      .btnRow1, .btnRow2, .btnRow3, .slider, .btnSave{
+      .btnRow1, .btnRow2, .btnRow3,.btnSave, .slider, .btnSave{
     width: 100px; /* Фиксированная ширина */
     height: 64px; /* Фиксированная высота */
     padding: 0; /* Убираем padding, если он не нужен */
@@ -39,39 +41,28 @@ canvas {
     color: white;  /* Меняем цвет текста */
 }
 
-  .btnRow1, .btnRow2{
+  .btnRow1, .btnRow2, .btnSave{
     cursor: pointer;
     width: 150px; /* Фиксированная ширина */
     height: 64px; 
   }
   .slider{
-    width: 200px;
-    
-  }
-  
-  .btnRow3{
-    color:grey;
-    width: 75px; /* Фиксированная ширина */
-    height: 64px; 
-  }
-  .btnSave{
-    cursor: pointer;
-    width: 300px;
-    margin-top:16px;
+    margin-left: 10чцpx;
+    width:280px;
   }
 
-        .menu {
+  .menu {
     position: fixed;  /* Элемент фиксируется относительно окна браузера */
     top: 40px;           /* Выравниваем по верхнему краю окна */
-    right: 5%;    /* Смещаем блок на 100 пикселей правее экрана */
+    right: 3%;    /* Смещаем блок на 100 пикселей правее экрана */
     width: 300px;     /* Пример ширины меню */
-    height: 300px;    /* Высота меню на весь экран */
+    height: 265x;    /* Высота меню на весь экран */
     border: 0.5px solid rgb(150, 150, 150);
     background-color: rgb(255, 255, 255); /* Пример фона */
     
 }
       padding: 0;
-      
+      overflow: hidden;
       margin: 0;
     }
   </style>
@@ -81,11 +72,8 @@ canvas {
   <div id="cnv"></div>
   <div class="menu">
   <button class="btnRow1" id="grid" onclick="selectButton(1)">grid</button><button class="btnRow1" id="clear" onclick="selectButton(2)">clear</button>
-
   <button class="btnRow2" id="pencil" onclick="selectButton(2)">pencil</button><button class="btnRow2" id="eraser" onclick="selectButton(2)">eraser</button>
-  <button class="btnRow3" id="rnd" onclick="selectButton(1)">random</button><input type="range" class="slider" id="chance" min="10" max="200" value="50">
-  <input type="color" id="cpF" value="#000000"> <input type="color" id="cpBG" value="#ffffff">
-  <button class="btnSave" id="save" onclick="selectButton(2)">save</button>
-
+  <input type="range" class="slider" id="chance" min="1" max="35" value="14"> 
+  <button class="btnSave" id="savePNG" onclick="selectButton(2)">PNG</button><button class="btnSave" id="saveSVG" onclick="selectButton(2)">SVG</button>
 </body>
 </html>
