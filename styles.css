@@ -1,0 +1,135 @@
+/* Подключаем шрифт SuisseIntl-Medium */
+@font-face {
+    font-family: 'SuisseIntl';
+    src: url('files/SuisseIntl-Medium.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Сброс стандартных стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    background-image: url('files/images/Frame 4.png'); /* Путь к изображению */
+    background-size: cover; /* Растягиваем фон на весь экран */
+    background-position: center; /* Центрируем изображение */
+    background-repeat: no-repeat;
+    color: #fff; /* Белый текст */
+    font-family: 'SuisseIntl', Arial, sans-serif; /* Используем новый шрифт */
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+}
+
+.center-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.center-content h1 {
+    font-size: 28px;
+    margin: 3px 0;
+}
+
+.center-content h2 {
+    font-size: 1.5rem;
+    color: #ddd;
+}
+
+.center-content .nickname {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+nav {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.nav-link {
+    position: absolute;
+    color: #fff;
+    font-size: 0.9rem;
+    text-decoration: none;
+    font-weight: normal;
+    transition: color 0.3s ease;
+}
+
+.nav-link.tools {
+    color: red;
+}
+
+.nav-link:hover {
+    color: #bbb;
+}
+
+/* Расположение ссылок */
+#behance {
+    top: 30%;
+    left: 20%;
+}
+
+#youtube {
+    top: 45%;
+    left: 22%;
+}
+
+#instagram {
+    top: 60%;
+    left: 55%;
+}
+
+#about {
+    top: 35%;
+    right: 20%;
+}
+
+#tools {
+    bottom: 25%;
+    right: 30%;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .center-content h1 {
+        font-size: 2rem;
+    }
+    .center-content h2 {
+        font-size: 1.2rem;
+    }
+    .nav-link {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .center-content h1 {
+        font-size: 1.5rem;
+    }
+    .center-content h2 {
+        font-size: 1rem;
+    }
+    .nav-link {
+        font-size: 0.7rem;
+    }
+    #behance, #youtube, #instagram, #about, #tools {
+        position: static;
+        text-align: center;
+        margin: 10px;
+        display: block;
+    }
+}
