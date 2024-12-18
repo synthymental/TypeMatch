@@ -15,7 +15,7 @@
 
 html, body {
     height: 100%;
-    background-image: url('files/images/Frame 4.png'); /* Путь к изображению */
+    background-image: url('files/images/bg.png'); /* Путь к изображению */
     background-size: cover; /* Растягиваем фон на весь экран */
     background-position: center; /* Центрируем изображение */
     background-repeat: no-repeat;
