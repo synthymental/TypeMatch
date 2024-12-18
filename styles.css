@@ -16,7 +16,11 @@
 html, body {
     height: 100%;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     background-image: url('files/bg.png'); /* Путь к изображению */
+=======
+    background-image: url('files/images/bg.png'); /* Путь к изображению */
+>>>>>>> Stashed changes
 =======
     background-image: url('files/images/bg.png'); /* Путь к изображению */
 >>>>>>> Stashed changes
