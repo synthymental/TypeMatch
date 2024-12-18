@@ -15,15 +15,7 @@
 
 html, body {
     height: 100%;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     background-image: url('files/bg.png'); /* Путь к изображению */
-=======
-    background-image: url('files/images/bg.png'); /* Путь к изображению */
->>>>>>> Stashed changes
-=======
-    background-image: url('files/images/bg.png'); /* Путь к изображению */
->>>>>>> Stashed changes
     background-size: cover; /* Растягиваем фон на весь экран */
     background-position: center; /* Центрируем изображение */
     background-repeat: no-repeat;
