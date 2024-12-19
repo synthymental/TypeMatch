@@ -1,0 +1,52 @@
+/* Подключаем шрифт SuisseIntl-Medium */
+@font-face {
+    font-family: 'SuisseIntl';
+    src: url('files/SuisseIntl-Medium.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Сброс стандартных стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: 'SuisseIntl', Arial, sans-serif;
+    overflow: hidden; /* Отключаем прокрутку */
+}
+
+p {
+  margin-top: 10px;
+    font-size: 0.7rem;
+    margin-bottom: 5px;
+}
+
+/* Контейнер для кнопок и текста */
+.ui-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 10; /* Поверх канваса */
+}
+
+/* Кнопки */
+button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Канвас */
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0; /* Под кнопками */
+}
