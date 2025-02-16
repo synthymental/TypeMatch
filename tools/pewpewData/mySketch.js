@@ -49,12 +49,12 @@ function setup() {
   
   speedLabel = createP("Speed:");
   speedLabel.position(20, 55);
-  speedSlider = createSlider(5, 30, 15, 1);
+  speedSlider = createSlider(5, 30, 10, 1);
   speedSlider.position(20, 90);
 	
 	amountLabel = createP("Amount:");
   amountLabel.position(20,100);
-  amountSlider = createSlider(0, 30, 20, 1);
+  amountSlider = createSlider(0, 30, 30, 1);
   amountSlider.position(20, 140);
   
   // Поле ввода и кнопка для смены текста
