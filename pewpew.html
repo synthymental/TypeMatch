@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>pewpew v1</title>
+  <!-- Подключаем шрифт Inter -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
+  <script src="https://unpkg.com/ml5@1/dist/ml5.js"></script>
+  <script src="matter.js"></script>
+
+  
+  <link rel="stylesheet" href="pewpewStyle.css">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="top-links">
+      <a href="#" class="back-link">back</a>
+      <a href="#" class="synthymental-link">synthymental</a>
+    </div>
+    <div class="content">
+      <div class="sidebar">
+        <div class="controls-block">
+          <h2>pewpew</h2>
+          <div class="control-group">
+            <label for="sizeRange">size: <span id="sizeValue">30</span></label>
+            <input type="range" id="sizeRange" min="10" max="100" value="30">
+          </div>
+          <div class="control-group">
+            <label for="speedRange">speed: <span id="speedValue">10</span></label>
+            <input type="range" id="speedRange" min="0" max="50" value="10">
+          </div>
+          <div class="control-group">
+            <label for="amountRange">amount: <span id="amountValue">20</span></label>
+            <input type="range" id="amountRange" min="0" max="100" value="20">
+          </div>
+          <div class="control-group">
+            <label for="gravityRange">gravity: <span id="gravityValue">0.4</span></label>
+            <input type="range" id="gravityRange" min="0" max="1" step="0.1" value="0.4">
+          </div>
+          <div class="input-group">
+            <div class="input-row">
+              <input type="text" id="textInput" placeholder="write something...">
+              <button class="arrow-button">></button>
+            </div>
+          </div>
+        </div>
+        <div class="text-group">
+          <label for="feedbackInput">Any feedback you can share with me on Instagram.</label>
+          <label for="feedbackInput2">@synthymental</label>
+        </div>
+        <a href="#" class="coffee-link">buy me a coffee <3</a>
+      </div>
+      <div class="canvas-container">
+        <div id="canvasContainer"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Скрипт для динамической заливки слайдеров с hover эффектом -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const sliders = document.querySelectorAll('input[type="range"]');
+
+      sliders.forEach(slider => {
+        const updateSliderFill = () => {
+          const min = slider.min || 0;
+          const max = slider.max || 100;
+          const value = parseFloat(slider.value);
+          const numMin = parseFloat(min);
+          const numMax = parseFloat(max);
+          const percentage = ((value - numMin) / (numMax - numMin)) * 90 + 5;
+          const fillColor = slider.matches(':hover') ? "#8B8B8B" : "#6B6B6B";
+          const trackColor = slider.matches(':hover') ? "#3a3a3a" : "#292929";
+          slider.style.setProperty('--slider-fill-color', fillColor);
+          slider.style.background = `linear-gradient(to right, ${fillColor} 0%, ${fillColor} ${percentage}%, ${trackColor} ${percentage}%, ${trackColor} 100%)`;
+
+          // Обновляем отображение значений
+          if (slider.id === 'sizeRange') {
+            document.getElementById('sizeValue').textContent = slider.value;
+          } else if (slider.id === 'speedRange') {
+            document.getElementById('speedValue').textContent = slider.value;
+          } else if (slider.id === 'amountRange') {
+            document.getElementById('amountValue').textContent = slider.value;
+          } else if (slider.id === 'gravityRange') {
+            document.getElementById('gravityValue').textContent = slider.value;
+          }
+        };
+
+        updateSliderFill();
+        slider.addEventListener('input', updateSliderFill);
+        slider.addEventListener('mouseenter', updateSliderFill);
+        slider.addEventListener('mouseleave', updateSliderFill);
+      });
+    });
+  </script>
+  <script src="pewpewScript.js"></script>
+</body>
+</html>
