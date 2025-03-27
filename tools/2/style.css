@@ -1,0 +1,231 @@
+
+    * {
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+    }
+    
+    body {
+      background-color: #000;
+      font-family: 'Inter', sans-serif;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Общий контейнер для ссылок и контента */
+    .wrapper {
+      width: 90%;
+      max-width: 1200px;
+      margin: 20px auto 40px auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Блок, в котором располагаются ссылки */
+    .top-links {
+      width: 100%;
+      height: 40px;
+      position: relative;
+      margin-bottom: 50px;
+    }
+    .top-links a {
+      position: absolute;
+      top: 0; 
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 8px;
+      transition: background-color 0.2s;
+    }
+    .top-links a:hover {
+      background-color: #1a1a1a;
+    }
+    /* "back" - слева */
+    .back-link {
+      left: 0; 
+    }
+    /* "synthymental" - по центру */ 
+    .synthymental-link {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    /* Контейнер для "сайдбар + холст" */
+    .content {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 40px;
+    }
+    /* Сайдбар */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    /* Первый "бабл" со слайдерами, инпутом и т.д. */
+    .controls-block {
+      background-color: #161616;
+      border: 1px solid #242424;
+      border-radius: 30px;
+      padding: 20px;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .controls-block h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .control-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .control-group label {
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 4px;
+    }
+    /* Начальные стили слайдера */
+    input[type="range"] {
+      --slider-fill-color: #6B6B6B;
+      --slider-track-color: #292929;
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 30px;
+      border-radius: 30px;
+      outline: none;
+      background: var(--slider-track-color);
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 30px;
+      width: 30px;
+      background: var(--slider-fill-color);
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid var(--slider-fill-color);
+    }
+    /* Для WebKit */
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 30px;
+      border-radius: 30px;
+    }
+    /* Для Firefox */
+    input[type="range"]::-moz-range-track {
+      height: 30px;
+      border-radius: 30px;
+    }
+    /* Для IE/Edge */
+    input[type="range"]::-ms-fill-lower {
+      border-radius: 30px;
+    }
+    input[type="range"]::-ms-fill-upper {
+      border-radius: 30px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-row {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .input-row input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      height: 37px;
+      border-radius: 30px;
+      background-color: #292929;
+      color: #fff;
+      font-size: 14px;
+      margin-right: 6px;
+    }
+    .arrow-button {
+      background-color: #6B6B6B;
+      border: none;
+      color: #fff;
+      height: 37px;
+      width: 37px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 30px;
+      transition: background-color 0.2s;
+    }
+    .arrow-button:hover {
+      background-color: #444;
+    }
+    /* Второй "бабл" - текстовый */
+    .text-group {
+      background-color: #161616;
+      border: 1px solid #242424;
+      border-radius: 20px;
+      padding: 20px;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .text-group label {
+      font-size: 14px;
+      color: #ccc;
+    }
+    .text-group label[for="feedbackInput2"] {
+      font-size: 14px;
+      color: #999;
+      text-align: right;
+    }
+    /* Ссылка "buy me a coffee <3" */
+    .coffee-link {
+      text-decoration: none;
+      color: #646363;
+      font-size: 14px;
+      text-align: center;
+      display: block;
+      margin-top: 4px;
+    }
+    .coffee-link:hover {
+      color: #bbb;
+    }
+    /* Холст p5.js */
+    .canvas-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #canvasContainer {
+      width: 700px;
+      height: 700px;
+      border: 1px solid rgb(255, 255, 255);
+    }
+    /* Адаптивность */
+    @media (max-width: 900px) {
+      .content {
+        flex-direction: column;
+        align-items: center;
+      }
+      .controls-block, .text-group {
+        width: 100%;
+        max-width: 400px;
+      }
+      #canvasContainer {
+        width: 100%;
+        max-width: 600px;
+      }
+    }
+  
