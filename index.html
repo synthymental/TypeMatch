@@ -1,26 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>synthymental</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Tools</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 40px;
+            background-color: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 1rem;
+            text-align: center;
+        }
+
+        .top-links {
+            width: 100%;
+            height: 40px;
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        .synthymental-link {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            font-size: 20px;
+            text-decoration: none;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 25px;
+            /* Делаем скругленный прямоугольник */
+            transition: background-color 0.3s ease;
+            border: 1px solid rgba(255, 255, 255);
+        }
+
+        .synthymental-link:hover {
+            background-color: rgba(255, 0, 0);
+            border-color: #000000;
+            color: #000000;
+        }
+
+        h1 {
+            font-size: 128px;
+            margin-top: 4%;
+            margin-bottom: 2rem;
+        }
+
+        ul {
+            list-style: none;
+            margin-top: 3%;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            position: relative;
+        }
+
+        a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #aaa;
+        }
+
+        /* Неактивные ссылки */
+        .disabled-link {
+            color: #777;
+            /* Серый цвет */
+            pointer-events: none;
+            /* Отключаем кликабельность */
+            cursor: default;
+        }
+
+        .disabled-link:hover {
+            color: #777;
+            /* Убираем эффект наведения */
+        }
+
+        .disabled-link+.preview {
+            display: none;
+        }
+
+        .preview {
+            position: fixed;
+            width: 700px;
+            height: 500px;
+            background-color: #fff;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+
+        li:hover .preview {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+
+            h1 {
+                font-size: 64px;
+            }
+
+            .preview {
+                width: 220px;
+                height: 140px;
+            }
+
+            .top-links a {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="center-content">
-            <p class="nickname">@synthymental</p>
-            <h1>Daniil Svetlov</h1>
-            <h1>it's a temporary page</h1>
-        </div>
-        <nav>
-            <a href="https://www.behance.net/svetlovdan" class="nav-link" id="behance">behance</a>
-            <a href="https://www.youtube.com/@synthymental" class="nav-link" id="youtube">youtube</a>
-            <a href="https://www.instagram.com/synthymental/" class="nav-link" id="instagram">instagram</a>
-            <a href="tools.html" class="nav-link" id="about">about</a>
-            <a href="tools.html" class="nav-link tools" id="tools">tools</a>
-        </nav>
+
+    <div class="top-links">
+        <a href="https://www.instagram.com/synthymental/" class="synthymental-link">@synthymental</a>
     </div>
+
+    <h1>tools</h1>
+
+    <ul>
+        <li>
+            <a href="https://synthymental.com/pewpew">pewpew</a>
+            <div class="preview" style="top: 10%; left: 5%; background-image: url('IndexData/preview-pewpew.png');"></div>
+        </li>
+        <li>
+            <a href="#" class="disabled-link">signal v3</a>
+            <div class="preview" style="top: 30%; left: 60%; background-image: url('preview-signal-v3.jpg');"></div>
+        </li>
+        <li>
+            <a href="#" class="disabled-link">biceps typeface</a>
+            <div class="preview" style="top: 50%; left: 10%; background-image: url('preview-biceps.jpg');"></div>
+        </li>
+        <li>
+            <a href="#" class="disabled-link">image drifter</a>
+            <div class="preview" style="top: 20%; left: 60%; background-image: url('preview-drifter.jpg');"></div>
+        </li>
+        <li>
+            <a href="#" class="disabled-link">multyShooters</a>
+            <div class="preview" style="top: 45%; left: 50%; background-image: url('preview-multy.jpg');"></div>
+        </li>
+        <li>
+            <a href="#" class="disabled-link">collager</a>
+            <div class="preview" style="top: 35%; left: 10%; background-image: url('preview-collager.jpg');"></div>
+        </li>
+        <li>
+            <a href="#" class="disabled-link">typeMatch</a>
+            <div class="preview" style="top: 40%; left: 70%; background-image: url('preview-typeMatch.jpg');"></div>
+        </li>
+    </ul>
+
 </body>
+
 </html>
