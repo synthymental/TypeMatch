@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dither Processor (New Style + Preset ColorMode)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Подключение p5.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/addons/p5.dom.min.js"></script>
+    <!-- Подключение Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- СТИЛИ CSS (Без изменений) --- */
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        html, body { height: 100%; overflow-x: hidden; }
+        body {
+          background-color: #000;
+          font-family: 'Inter', sans-serif;
+          color: #fff;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .top-links {
+          width: 95%; max-width: 1200px; height: 40px;
+          position: relative; margin-top: 20px; margin-bottom: 30px;
+          display: flex; justify-content: space-between; align-items: center;
+        }
+        .top-links a {
+          display: flex; align-items: center; padding: 8px 12px;
+          text-decoration: none; color: #fff; font-size: 16px;
+          border-radius: 8px; transition: background-color 0.2s;
+        }
+        .top-links a:hover { background-color: #1a1a1a; }
+        .content {
+          width: 95%; max-width: 1600px; display: flex;
+          flex-direction: row; align-items: flex-start;
+          gap: 30px; flex-grow: 1; padding-bottom: 20px;
+        }
+        .sidebar {
+          display: flex; flex-direction: column; gap: 16px;
+          width: 320px; flex-shrink: 0;
+        }
+        .controls-block {
+          background-color: #161616; border: 1px solid #242424;
+          border-radius: 30px; padding: 20px; width: 100%;
+          display: flex; flex-direction: column; gap: 12px;
+        }
+        .controls-block h2 { font-size: 18px; margin-bottom: 8px; text-align: center; color: #eee; }
+        .control-group { display: flex; flex-direction: column; }
+        .control-group label {
+          font-size: 14px; color: #ccc; margin-bottom: 8px;
+          display: flex; justify-content: space-between;
+        }
+        .control-group label span {
+          font-family: monospace; color: #fff; background-color: #292929;
+          padding: 2px 6px; border-radius: 5px; font-size: 12px;
+        }
+        input[type="range"] {
+          --slider-fill-color: #6B6B6B; --slider-track-color: #292929;
+          -webkit-appearance: none; appearance: none; width: 100%; height: 30px;
+          border-radius: 30px; outline: none;
+          background: linear-gradient(to right, var(--slider-fill-color) 0%, var(--slider-fill-color) 50%, var(--slider-track-color) 50%, var(--slider-track-color) 100%);
+          margin-top: 4px; cursor: pointer; transition: background 0.1s ease-in-out;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none; appearance: none; height: 30px; width: 30px;
+          background: var(--slider-fill-color); border-radius: 50%; cursor: pointer;
+          border: none; transition: background-color 0.1s ease-in-out;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        input[type="range"]::-webkit-slider-runnable-track { height: 30px; border-radius: 30px; }
+        input[type="range"]::-moz-range-track { height: 30px; border-radius: 30px; }
+         .button-row { display: flex; gap: 10px; margin-top: 10px; }
+         .button-row button {
+           flex: 1; background-color: #3a3a3a; border: 1px solid #555; color: #ddd;
+           height: 40px; font-size: 14px; cursor: pointer; border-radius: 30px;
+           transition: background-color 0.2s, border-color 0.2s; padding: 0 15px;
+           display: flex; align-items: center; justify-content: center; gap: 6px;
+         }
+         .button-row button:hover { background-color: #4f4f4f; border-color: #777; }
+         .button-row button.primary { background-color: #6B6B6B; color: #fff; border-color: #888; }
+          .button-row button.primary:hover { background-color: #818181; border-color: #aaa; }
+         .button-row button i { margin-right: 4px; font-size: 16px; }
+        .canvas-area {
+          flex-grow: 1; display: flex; justify-content: center; align-items: center;
+          background-color: #0f0f0f; border-radius: 12px; overflow: hidden;
+          position: relative; min-width: 300px; aspect-ratio: 4 / 3;
+        }
+        #canvasContainer canvas { max-width: 100%; max-height: 100%; display: block; }
+        .dropdown { position: relative; width: 100%; margin-bottom: 10px; }
+        .dropdown-btn { width: 100%; padding: 12px 16px; background-color: #242424; border: 1px solid #3a3a3a; border-radius: 8px; color: #fff; font-size: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+        .dropdown-btn:hover { background-color: #2e2e2e; border-color: #4a4a4a; }
+        .dropdown-btn i { transition: transform 0.2s; }
+        .dropdown-btn.active i { transform: rotate(180deg); }
+        .dropdown-content { position: absolute; top: 100%; left: 0; width: 100%; background-color: #242424; border: 1px solid #3a3a3a; border-radius: 8px; margin-top: 4px; padding: 8px 0; z-index: 10; display: none; max-height: 300px; overflow-y: auto; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        .dropdown-content.show { display: block; }
+        .dropdown-item { padding: 10px 16px; color: #ddd; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+        .dropdown-item:hover { background-color: #3a3a3a; color: #fff; }
+        .dropdown-item.active { background-color: #4a4a4a; color: #fff; }
+        .preset-description { font-size: 12px; color: #999; margin-top: 2px; }
+        .tooltip { position: relative; display: inline-block; margin-left: 6px; cursor: help; }
+        .tooltip .tooltiptext { visibility: hidden; width: 200px; background-color: #333; color: #fff; text-align: center; border-radius: 6px; padding: 8px; position: absolute; z-index: 1; bottom: 125%; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 0.3s; font-size: 12px; line-height: 1.4; }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+        .footer { width: 100%; margin-top: auto; padding: 20px 0; color: #646363; font-size: 14px; text-align: center; flex-shrink: 0; }
+        .footer a { text-decoration: none; color: #646363; font-size: 14px; text-align: center; display: inline-block; transition: color 0.2s; }
+        .footer a:hover { color: #bbb; }
+        @media (max-width: 800px) {
+          .content { flex-direction: column; align-items: center; gap: 20px;}
+          .sidebar { width: 100%; max-width: 500px; order: 2; }
+          .canvas-area { width: 100%; max-width: 95%; height: auto; aspect-ratio: 4 / 3; margin-bottom: 20px; order: 1; max-height: 65vh; }
+          .top-links { margin-bottom: 20px; height: auto; flex-wrap: wrap; justify-content: center; gap: 10px;}
+          .top-links a { font-size: 14px; padding: 6px 10px;}
+          .controls-block { padding: 15px; }
+          .button-row button { height: 38px; font-size: 13px;}
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <div class="top-links">
+        <a href="#" class="back-link">← Back</a>
+        <a href="#" class="info-link">synthymental</a>
+    </div>
+
+    <div class="content">
+        <div class="sidebar">
+             <!-- Блок управления дизерингом -->
+             <div class="controls-block">
+                <h2>Signal v3</h2>
+                <!-- Dropdown -->
+                 <div class="dropdown">
+                     <button class="dropdown-btn" id="presetDropdown">
+                         <span>Select Preset <span class="tooltip">?<span class="tooltiptext">Choose...</span></span></span>
+                         <i class="fas fa-chevron-down"></i>
+                     </button>
+                     <div class="dropdown-content" id="presetDropdownContent">
+                        <div class="dropdown-item" data-preset="floyd-steinberg">Floyd-Steinberg<div class="preset-description">Classic... (7/16, 3/16, 5/16, 1/16)</div></div>
+                        <div class="dropdown-item" data-preset="Anatoly">Anatoly<div class="preset-description">Mac style (1/8, 1/8, 1/8, 1/8)</div></div>
+                        <div class="dropdown-item" data-preset="Baker">Baker<div class="preset-description">Faster FS (8/32, 4/32, 2/32)</div></div>
+                        <div class="dropdown-item" data-preset="Gragas">Gragas<div class="preset-description">Smooth (5/32, 3/32, 2/32)</div></div>
+                        <div class="dropdown-item" data-preset="RedbullVodka">RedbullVodka<div class="preset-description">Simple (2/4, 1/4)</div></div>
+                        <div class="dropdown-item" data-preset="Mentol">Mentol<div class="preset-description">Quality (8/42, 4/42, 2/42)</div></div>
+                        <div class="dropdown-item" data-preset="lox">lox<div class="preset-description">Pro (7/48, 5/48, 3/48)</div></div>
+                        <div class="dropdown-item" data-preset="custom" data-custom>Custom<div class="preset-description">Use your own settings</div></div>
+                     </div>
+                 </div>
+                <!-- Слайдеры -->
+                <div class="control-group"><label for="sliderThreshold">Threshold <span id="threshold-value">127</span></label><input type="range" id="sliderThreshold" min="0" max="254" value="127" step="1"></div>
+                <div class="control-group"><label for="sliderWeight1">Weight 1 <span id="weight1-value">0.44</span></label><input type="range" id="sliderWeight1" min="0" max="1" value="0.4375" step="0.01"></div>
+                <div class="control-group"><label for="sliderWeight2">Weight 2 <span id="weight2-value">0.19</span></label><input type="range" id="sliderWeight2" min="0" max="1" value="0.1875" step="0.01"></div>
+                <div class="control-group"><label for="sliderWeight3">Weight 3 <span id="weight3-value">0.31</span></label><input type="range" id="sliderWeight3" min="0" max="1" value="0.3125" step="0.01"></div>
+                <div class="control-group"><label for="sliderWeight4">Weight 4 <span id="weight4-value">0.06</span></label><input type="range" id="sliderWeight4" min="0" max="1" value="0.0625" step="0.01"></div>
+                <div class="control-group"><label for="sliderColorS">Color Mode <span id="colorS-value">0</span></label><input type="range" id="sliderColorS" min="0" max="4" value="0" step="1"></div>
+            </div>
+             <!-- Блок управления источником -->
+            <div class="controls-block">
+                <div class="button-row"><button id="buttonWebcam"><i class="fas fa-camera"></i> Webcam</button><button id="buttonLoad"><i class="fas fa-folder-open"></i> Load Image</button></div>
+                <div class="button-row"><button id="buttonSave" class="primary"><i class="fas fa-download"></i> Save Image</button></div>
+            </div>
+        </div>
+        <!-- Область холста -->
+        <div class="canvas-area" id="canvasContainer"></div>
+    </div>
+
+    <footer class="footer">
+        <a href="#" target="_blank">buy me a coffee <3</a>
+    </footer>
+
+    <script>
+        // --- Глобальные переменные ---
+        let p5Canvas; let processedImg = null; let sourceImage = null;
+        let defaultImage = null; let video = null; let processingWorker;
+        let workerBusy = false; let currentSourceType = 'image'; let sourceReady = false;
+        let canvasWidth = 800; let canvasHeight = 600; let threshold = 127;
+        let weight1 = 7 / 16; let weight2 = 3 / 16; let weight3 = 5 / 16;
+        let weight4 = 1 / 16; let colorS = 0;
+
+        // --- ОБНОВЛЕННЫЙ ОБЪЕКТ ПРЕСЕТОВ с colorMode ---
+        const presets = {
+            'floyd-steinberg':{name:'Floyd-Steinberg',weights:[7/16,3/16,5/16,1/16],threshold:127, colorMode: 0, description:'Classic error diffusion'},
+            'Anatoly':{name:'Anatoly',weights:[1/8,1/8,1/8,1/8],threshold:127, colorMode: 3, description:'Apple Macintosh style'},
+            'Baker':{name:'Baker',weights:[8/32,4/32,2/32,0],threshold:127, colorMode: 2, description:'Faster version of Floyd-Steinberg'},
+            'Gragas':{name:'Gragas',weights:[5/32,3/32,2/32,0],threshold:127, colorMode: 0, description:'Smooth error diffusion'},
+            'RedbullVodka':{name:'RedbullVodka',weights:[2/4,1/4,0,0],threshold:127, colorMode: 4, description:'Simplified Sierra'},
+            'Mentol':{name:'Mentol',weights:[8/42,4/42,2/42,0],threshold:127, colorMode: 0, description:'High-quality diffusion'},
+            'lox':{name:'lox',weights:[7/48,5/48,3/48,0],threshold:127, colorMode: 0, description:'Professional quality'},
+            'custom':{name:'Custom',weights:[0,0,0,0],threshold:127, colorMode: 0, description:'Use your own settings'} // colorMode для custom тоже можно задать по умолчанию
+        };
+
+        // --- Функции p5.js ---
+        function preload() { defaultImage=loadImage('1.png',()=>{console.log("Default image '1.png' loaded.");},(err)=>{console.error("Failed to load '1.png'.",err);defaultImage=null;}); }
+
+        function setup() {
+            pixelDensity(1); frameRate(15); let canvasContainer = document.getElementById('canvasContainer');
+            canvasWidth = canvasContainer.clientWidth; canvasHeight = canvasContainer.clientHeight;
+            if (canvasWidth === 0 || canvasHeight === 0) { canvasWidth = Math.max(300, windowWidth * 0.5); canvasHeight = canvasWidth * (3 / 4); console.warn("Canvas container zero size fallback:", canvasWidth, canvasHeight); }
+            p5Canvas = createCanvas(canvasWidth, canvasHeight, { willReadFrequently: true });
+            p5Canvas.parent('canvasContainer'); background(0);
+            // Инициализация воркера
+            try { processingWorker=new Worker(URL.createObjectURL(new Blob([document.querySelector('#workerCode').textContent],{type:'text/javascript'})));processingWorker.onmessage=function(e){if(!e.data||!e.data.processed||typeof e.data.width==='undefined'||typeof e.data.height==='undefined'){console.warn("Worker OnMessage: Incomplete data.");workerBusy=false;return;}if(!processedImg){console.warn(`Worker OnMessage: processedImg null. Skipping update for ${e.data.width}x${e.data.height}.`);workerBusy=false;return;}if(e.data.width!==processedImg.width||e.data.height!==processedImg.height){console.warn(`Worker OnMessage: Dimension mismatch. Worker: ${e.data.width}x${e.data.height}, Buffer: ${processedImg.width}x${processedImg.height}. Skipping.`);workerBusy=false;return;}try{let result=new Uint8ClampedArray(e.data.processed);processedImg.loadPixels();if(!processedImg.pixels||result.length!==processedImg.pixels.length){console.error(`Worker OnMessage: CRITICAL - Pixels array missing or length mismatch! Result: ${result.length}, Expected: ${processedImg.pixels?.length||'N/A'}. Re-init buffer.`);processedImg=createImage(e.data.width,e.data.height);if(processedImg){processedImg.loadPixels();if(result.length===processedImg.pixels.length){processedImg.pixels.set(result);processedImg.updatePixels();}else{console.error("Worker OnMessage: Length mismatch persisted.");}}else{console.error("Worker OnMessage: Failed to re-create buffer.");}}else{processedImg.pixels.set(result);processedImg.updatePixels();}}catch(error){console.error("Worker OnMessage: Error applying result:",error);}finally{workerBusy=false;}};processingWorker.onerror=function(e){console.error("Error in Web Worker:",e);workerBusy=false;};} catch (error){console.error("Failed to initialize Web Worker:",error);alert("Error initializing background processing.");}
+            // Настройка контролов
+            setupControls();
+            // Установка начального изображения
+            if(defaultImage){prepareImageSource(defaultImage);}else{fill(100);textAlign(CENTER,CENTER);textSize(16);text("Load image or start webcam",width/2,height/2);}
+            // Установка пресета по умолчанию
+            const defaultPresetId='floyd-steinberg';applyPreset(defaultPresetId);updateActiveDropdownItem(defaultPresetId);const defaultPreset=presets[defaultPresetId];if(defaultPreset){document.getElementById('presetDropdown').querySelector('span').textContent=defaultPreset.name;}
+        }
+
+        function draw() { /* Отрисовка 1:1, без изменений */ background(0);let sourceWidth=0,sourceHeight=0,sourcePixels=null,currentSourceValid=false,sourceBuffer=null;if(currentSourceType==='webcam'&&video?.loadedmetadata&&video.width>0){if(video.elt.readyState>=2){try{video.loadPixels();if(video.pixels?.length>0){sourceWidth=video.width;sourceHeight=video.height;sourcePixels=video.pixels;sourceBuffer=video.pixels.buffer;currentSourceValid=true;}}catch(error){console.error("Draw: Error loading video pixels:",error);}}}else if(currentSourceType==='image'&&sourceImage?.width>0){try{sourceImage.loadPixels();if(sourceImage.pixels?.length>0){sourceWidth=sourceImage.width;sourceHeight=sourceImage.height;sourcePixels=sourceImage.pixels;sourceBuffer=sourceImage.pixels.buffer;currentSourceValid=true;}}catch(error){console.error("Draw: Error loading image pixels:",error);}}sourceReady=currentSourceValid;if(sourceReady&&sourceBuffer&&!workerBusy&&processingWorker){if(!processedImg||processedImg.width!==sourceWidth||processedImg.height!==sourceHeight){console.log(`Draw: Creating/Resizing buffer for worker to ${sourceWidth}x${sourceHeight}`);processedImg=createImage(sourceWidth,sourceHeight);if(processedImg)processedImg.loadPixels();else console.error("Draw: Failed to create buffer!");}if(processedImg&&processedImg.width>0&&!workerBusy){workerBusy=true;processingWorker.postMessage({sourcePixels:sourceBuffer,width:sourceWidth,height:sourceHeight,threshold:threshold,weight1:weight1,weight2:weight2,weight3:weight3,weight4:weight4,colorS:colorS},[sourceBuffer]);}}else if(sourceReady&&!processedImg){console.log(`Draw: Source ready, creating initial buffer ${sourceWidth}x${sourceHeight}.`);processedImg=createImage(sourceWidth,sourceHeight);if(processedImg)processedImg.loadPixels();else console.error("Draw: Failed to create initial buffer!");}if(processedImg&&processedImg.width>0&&processedImg.height>0){let srcW=processedImg.width;let srcH=processedImg.height;let displayW=min(srcW,canvasWidth);let displayH=min(srcH,canvasHeight);let offsetX=(canvasWidth-displayW)/2;let offsetY=(canvasHeight-displayH)/2;let sx=0;let sy=0;let sWidth=displayW;let sHeight=displayH;image(processedImg,offsetX,offsetY,displayW,displayH,sx,sy,sWidth,sHeight);}else if(!sourceReady){fill(150);textAlign(CENTER,CENTER);textSize(16);if(currentSourceType==='webcam'&&!video){text("Click 'Webcam' to start",width/2,height/2);}else if(currentSourceType==='webcam'&&video&&!video.loadedmetadata){text("Initializing Webcam...",width/2,height/2);}else if(currentSourceType==='image'&&!sourceImage){text("Load an Image",width/2,height/2);}else{text("Waiting for source...",width/2,height/2);}} }
+
+        function windowResized() { /* Без изменений */ let canvasContainer=document.getElementById('canvasContainer');if(canvasContainer){let newWidth=canvasContainer.clientWidth;let newHeight=canvasContainer.clientHeight;if(newWidth>0&&newHeight>0&&(newWidth!==canvasWidth||newHeight!==canvasHeight)){canvasWidth=newWidth;canvasHeight=newHeight;resizeCanvas(canvasWidth,canvasHeight);console.log(`Canvas resized to: ${canvasWidth}x${canvasHeight}`);}}}
+
+        // --- Вспомогательные функции ---
+        function prepareImageSource(img){if(!img||img.width===0||img.height===0){console.error("PrepareImageSource: Invalid image.");sourceReady=false;return;}stopWebcam();console.log(`PrepareImageSource: Preparing image ${img.width}x${img.height}`);sourceImage=img;if(!processedImg||processedImg.width!==sourceImage.width||processedImg.height!==sourceImage.height){console.log(`PrepareImageSource: Creating/Resizing buffer to ${sourceImage.width}x${sourceImage.height}`);processedImg=createImage(sourceImage.width,sourceImage.height);if(processedImg)processedImg.loadPixels();else console.error("PrepareImageSource: Failed to create buffer!");console.log(`PrepareImageSource: Buffer initialized, length: ${processedImg?.pixels?.length||0}`);}currentSourceType='image';sourceReady=true;workerBusy=false;}
+        function startWebcam(){console.log("StartWebcam: Attempting...");sourceImage=null;sourceReady=false;if(!video){video=createCapture(VIDEO,(stream)=>{console.log("StartWebcam: Stream started.");video.size(canvasWidth,canvasHeight);video.hide();currentSourceType='webcam';sourceReady=false;workerBusy=false;});video.elt.addEventListener('loadedmetadata',()=>{console.log(`StartWebcam: Metadata loaded: ${video.width}x${video.height}`);if(video.width>0&&video.height>0){if(!processedImg||processedImg.width!==video.width||processedImg.height!==video.height){console.log(`StartWebcam: Creating/Resizing buffer to ${video.width}x${video.height}`);processedImg=createImage(video.width,video.height);if(processedImg)processedImg.loadPixels();else console.error("StartWebcam: Failed to create buffer!");console.log(`StartWebcam: Buffer initialized, length: ${processedImg?.pixels?.length||0}`);}}else{console.warn("StartWebcam: Metadata loaded zero w/h.");}});video.elt.addEventListener('error',(err)=>{console.error("StartWebcam: Webcam Error:",err);alert("Could not access webcam.");stopWebcam();});}else{console.log("StartWebcam: Webcam object exists.");currentSourceType='webcam';sourceReady=false;workerBusy=false;}}
+        function stopWebcam(){if(video){console.log("Stopping webcam.");video.elt.srcObject?.getTracks().forEach(track=>track.stop());video.elt.srcObject=null;video.remove();video=null;}}
+        function handleFileSelect(file){if(!file||!file.type.startsWith('image/')){alert("Please select a valid image file.");return;}const objectUrl=URL.createObjectURL(file);loadImage(objectUrl,(img)=>{console.log(`HandleFileSelect: Loaded ${img.width}x${img.height}.`);prepareImageSource(img);URL.revokeObjectURL(objectUrl);console.log("HandleFileSelect: Object URL revoked.");},(err)=>{console.error("HandleFileSelect: Load error:",err);alert("Failed to load image.");URL.revokeObjectURL(objectUrl);console.log("HandleFileSelect: Object URL revoked on error.");});}
+
+        // --- ОБНОВЛЕННАЯ ФУНКЦИЯ applyPreset ---
+        function applyPreset(presetId){
+            const preset = presets[presetId];
+            if (!preset) return;
+            console.log("Applying preset:", preset.name);
+
+            if (presetId !== 'custom') {
+                weight1 = preset.weights[0]; weight2 = preset.weights[1];
+                weight3 = preset.weights[2]; weight4 = preset.weights[3];
+                threshold = preset.threshold;
+                // --- Устанавливаем colorS из пресета ---
+                colorS = preset.colorMode || 0; // Используем 0, если colorMode не задан
+
+                // Обновляем UI всех слайдеров
+                updateSliderUI('sliderWeight1', weight1, 'weight1-value', 2);
+                updateSliderUI('sliderWeight2', weight2, 'weight2-value', 2);
+                updateSliderUI('sliderWeight3', weight3, 'weight3-value', 2);
+                updateSliderUI('sliderWeight4', weight4, 'weight4-value', 2);
+                updateSliderUI('sliderThreshold', threshold, 'threshold-value', 0);
+                // --- Обновляем UI для colorS ---
+                updateSliderUI('sliderColorS', colorS, 'colorS-value', 0);
+            }
+            workerBusy = false; // Разрешаем обработку
+        }
+        // --- КОНЕЦ ОБНОВЛЕННОЙ applyPreset ---
+
+        function updateActiveDropdownItem(presetId){const dropdownItems=document.querySelectorAll('.dropdown-item');dropdownItems.forEach(item=>{item.classList.toggle('active',item.getAttribute('data-preset')===presetId);});}
+
+        // --- Логика стилизации слайдеров ---
+        function updateSliderStyle(slider) { if(!slider)return;const min=slider.min||0;const max=slider.max||100;const value=parseFloat(slider.value);const numMin=parseFloat(min);const numMax=parseFloat(max);const percentage=numMax-numMin===0?50:((value-numMin)/(numMax-numMin))*90+5;const fillColor=slider.matches(':hover')?"#8B8B8B":"#6B6B6B";const trackColor=slider.matches(':hover')?"#3a3a3a":"#292929";slider.style.setProperty('--slider-fill-color',fillColor);slider.style.background=`linear-gradient(to right, ${fillColor} 0%, ${fillColor} ${percentage}%, ${trackColor} ${percentage}%, ${trackColor} 100%)`; }
+        function updateSliderUI(sliderId, value, valueLabelId, precision) { const slider=document.getElementById(sliderId);const labelSpan=document.getElementById(valueLabelId);if(slider&&labelSpan){slider.value=value;labelSpan.textContent=typeof value==='number'?value.toFixed(precision):value;updateSliderStyle(slider);} }
+
+        // --- Настройка контролов ---
+        function setupControls() {
+            const sliders = document.querySelectorAll('input[type="range"]');
+            const dropdownBtn = document.getElementById('presetDropdown');
+            const dropdownContent = document.getElementById('presetDropdownContent');
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            const markAsCustom = () => { updateActiveDropdownItem('custom'); const customPreset=presets['custom']; dropdownBtn.querySelector('span').textContent = customPreset ? customPreset.name : 'Custom'; workerBusy = false; }
+
+            sliders.forEach(slider => {
+                const valueLabelId = slider.id.replace('slider', '').toLowerCase() + '-value';
+                const labelSpan = document.getElementById(valueLabelId);
+                const handleSliderInput = () => {
+                    const sliderValue = slider.step === '1' ? parseInt(slider.value) : parseFloat(slider.value);
+                    switch(slider.id) { case 'sliderThreshold': threshold = sliderValue; break; case 'sliderWeight1': weight1 = sliderValue; break; case 'sliderWeight2': weight2 = sliderValue; break; case 'sliderWeight3': weight3 = sliderValue; break; case 'sliderWeight4': weight4 = sliderValue; break; case 'sliderColorS': colorS = sliderValue; break; }
+                    if (labelSpan) { const precision = (slider.step && slider.step.includes('.')) ? 2 : 0; labelSpan.textContent = sliderValue.toFixed(precision); }
+                    updateSliderStyle(slider);
+                    if (slider.id !== 'sliderColorS') { markAsCustom(); } else { workerBusy = false; }
+                };
+                if (labelSpan) { const initialValue = slider.step === '1' ? parseInt(slider.value) : parseFloat(slider.value); const precision = (slider.step && slider.step.includes('.')) ? 2 : 0; labelSpan.textContent = initialValue.toFixed(precision); } updateSliderStyle(slider);
+                slider.addEventListener('input', handleSliderInput);
+                slider.addEventListener('mouseenter', () => updateSliderStyle(slider));
+                slider.addEventListener('mouseleave', () => updateSliderStyle(slider));
+            });
+
+             // --- Слушатели для кнопок и Dropdown ---
+             document.getElementById('buttonWebcam').addEventListener('click', startWebcam);
+             document.getElementById('buttonLoad').addEventListener('click', () => { const fileInput = document.createElement('input'); fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.style.display = 'none'; fileInput.addEventListener('change', (e) => { if (e.target.files && e.target.files.length > 0) { handleFileSelect(e.target.files[0]); } document.body.removeChild(fileInput); }); document.body.appendChild(fileInput); fileInput.click(); });
+             document.getElementById('buttonSave').addEventListener('click', () => { if (processedImg && processedImg.width > 0) { processedImg.save("dithered_image.png"); } else { alert("No processed image to save."); } });
+             dropdownBtn.addEventListener('click', function() { dropdownContent.classList.toggle('show'); this.classList.toggle('active'); });
+             window.addEventListener('click', function(e) { if (!dropdownBtn.contains(e.target) && !dropdownContent.contains(e.target)) { dropdownContent.classList.remove('show'); dropdownBtn.classList.remove('active'); } });
+             dropdownItems.forEach(item => { item.addEventListener('click', function() { const presetId = this.getAttribute('data-preset'); const preset = presets[presetId]; if (preset) { dropdownBtn.querySelector('span').textContent = preset.name; } applyPreset(presetId); updateActiveDropdownItem(presetId); dropdownContent.classList.remove('show'); dropdownBtn.classList.remove('active'); workerBusy = false; }); });
+        } // --- Конец setupControls() ---
+
+    </script>
+
+    <!-- Код Web Worker (ваш оригинальный алгоритм + возврат width/height) - БЕЗ ИЗМЕНЕНИЙ -->
+    <script id="workerCode" type="text/js-worker">
+        function clamp(val){return Math.min(255,Math.max(0,val));}
+        function adjustColor(r,g,b,errorR,errorG,errorB,colorS){let newR=clamp(r+errorR);let newG=clamp(g+errorG);let newB=clamp(b+errorB);if(colorS==1){return[newG,newB,newB];}else if(colorS==2){return[newG,newB,newR];}else if(colorS==3){return[newB,newG,newR];}else if(colorS==4){return[newB,newR,newG];}else{return[newR,newG,newB];}}
+        self.onmessage=function(e){let data=e.data;if(!data||!data.sourcePixels||typeof data.width==='undefined'){return;}let src=new Uint8ClampedArray(data.sourcePixels);let width=data.width;let height=data.height;let threshold=data.threshold;let weight1=data.weight1;let weight2=data.weight2;let weight3=data.weight3;let weight4=data.weight4;let colorS=data.colorS;let temp=new Uint8ClampedArray(src);for(let y=0;y<height-1;y++){for(let x=0;x<width-1;x++){let idx=(x+y*width)*4;let r=temp[idx];let g=temp[idx+1];let b=temp[idx+2];let newR=(r>threshold)?255:0;let newG=(g>threshold)?255:0;let newB=(b>threshold)?255:0;let errorR=r-newR;let errorG=g-newG;let errorB=b-newB;src[idx]=newR;src[idx+1]=newG;src[idx+2]=newB;src[idx+3]=255;let adjusted;if(x+1<width){let idx1=((x+1)+y*width)*4;adjusted=adjustColor(temp[idx1],temp[idx1+1],temp[idx1+2],errorR*weight1,errorG*weight1,errorB*weight1,colorS);temp[idx1]=adjusted[0];temp[idx1+1]=adjusted[1];temp[idx1+2]=adjusted[2];}if(x-1>=0&&y+1<height){let idx2=((x-1)+(y+1)*width)*4;adjusted=adjustColor(temp[idx2],temp[idx2+1],temp[idx2+2],errorR*weight2,errorG*weight2,errorB*weight2,colorS);temp[idx2]=adjusted[0];temp[idx2+1]=adjusted[1];temp[idx2+2]=adjusted[2];}if(y+1<height){let idx3=(x+(y+1)*width)*4;adjusted=adjustColor(temp[idx3],temp[idx3+1],temp[idx3+2],errorR*weight3,errorG*weight3,errorB*weight3,colorS);temp[idx3]=adjusted[0];temp[idx3+1]=adjusted[1];temp[idx3+2]=adjusted[2];}if(x+1<width&&y+1<height){let idx4=((x+1)+(y+1)*width)*4;adjusted=adjustColor(temp[idx4],temp[idx4+1],temp[idx4+2],errorR*weight4,errorG*weight4,errorB*weight4,colorS);temp[idx4]=adjusted[0];temp[idx4+1]=adjusted[1];temp[idx4+2]=adjusted[2];}}}postMessage({processed:src.buffer,width:width,height:height},[src.buffer]);};
+    </script>
+
+</body>
+</html>
