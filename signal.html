@@ -196,13 +196,13 @@
             'Baker':{name:'Baker',weights:[0,1,1/8,0],threshold:27, colorMode: 2, description:'Faster version of Floyd-Steinberg'},
             'Gragas':{name:'Gragas',weights:[1,0,0,0],threshold:252, colorMode: 4, description:'Smooth error diffusion'},
             'RedbullVodka':{name:'RedbullVodka',weights:[0.02,0.02,0.84,0],threshold:13, colorMode: 3, description:'Simplified Sierra'},
-            'Mentol':{name:'Kotik',weights:[0.23,0.64,0,0],threshold:254, colorMode: 3, description:'High-quality diffusion'},
-            'lox':{name:'Moh',weights:[0.72,0,0,0],threshold:127, colorMode: 1, description:'Professional quality'},
+            'Kotik':{name:'Kotik',weights:[0.23,0.64,0,0],threshold:254, colorMode: 3, description:'High-quality diffusion'},
+            'Moh':{name:'Moh',weights:[0.72,0,0,0],threshold:127, colorMode: 1, description:'Professional quality'},
             'custom':{name:'Custom',weights:[0,0,0,0],threshold:127, colorMode: 0, description:'Use your own settings'} // colorMode для custom тоже можно задать по умолчанию
         };
 
         // --- Функции p5.js ---
-        function preload() { defaultImage=loadImage('1.png',()=>{console.log("Default image '1.png' loaded.");},(err)=>{console.error("Failed to load '1.png'.",err);defaultImage=null;}); }
+        function preload() { defaultImage=loadImage('2.png',()=>{console.log("Default image '1.png' loaded.");},(err)=>{console.error("Failed to load '1.png'.",err);defaultImage=null;}); }
 
         function setup() {
             pixelDensity(1); frameRate(15); let canvasContainer = document.getElementById('canvasContainer');
