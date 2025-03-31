@@ -148,13 +148,13 @@
                          <i class="fas fa-chevron-down"></i>
                      </button>
                      <div class="dropdown-content" id="presetDropdownContent">
-                        <div class="dropdown-item" data-preset="floyd-steinberg">Floyd-Steinberg<div class="preset-description">Classic... (7/16, 3/16, 5/16, 1/16)</div></div>
-                        <div class="dropdown-item" data-preset="Anatoly">Anatoly<div class="preset-description">Mac style (1/8, 1/8, 1/8, 1/8)</div></div>
-                        <div class="dropdown-item" data-preset="Baker">Baker<div class="preset-description">Faster FS (8/32, 4/32, 2/32)</div></div>
-                        <div class="dropdown-item" data-preset="Gragas">Gragas<div class="preset-description">Smooth (5/32, 3/32, 2/32)</div></div>
-                        <div class="dropdown-item" data-preset="RedbullVodka">RedbullVodka<div class="preset-description">Simple (2/4, 1/4)</div></div>
-                        <div class="dropdown-item" data-preset="Mentol">Mentol<div class="preset-description">Quality (8/42, 4/42, 2/42)</div></div>
-                        <div class="dropdown-item" data-preset="lox">lox<div class="preset-description">Pro (7/48, 5/48, 3/48)</div></div>
+                        <div class="dropdown-item" data-preset="floyd-steinberg">Floyd-Steinberg<div class="preset-description">Classic</div></div>
+                        <div class="dropdown-item" data-preset="Anatoly">Anatoly<div class="preset-description">Mac style</div></div>
+                        <div class="dropdown-item" data-preset="Baker">Baker<div class="preset-description">Faster FS</div></div>
+                        <div class="dropdown-item" data-preset="Gragas">Gragas<div class="preset-description">Smooth</div></div>
+                        <div class="dropdown-item" data-preset="RedbullVodka">RedbullVodka<div class="preset-description">Simple</div></div>
+                        <div class="dropdown-item" data-preset="Kotik">Kotik<div class="preset-description">Quality</div></div>
+                        <div class="dropdown-item" data-preset="Moh">Moh<div class="preset-description">Pro</div></div>
                         <div class="dropdown-item" data-preset="custom" data-custom>Custom<div class="preset-description">Use your own settings</div></div>
                      </div>
                  </div>
@@ -177,7 +177,7 @@
     </div>
 
     <footer class="footer">
-        <a href="#" target="_blank">buy me a coffee <3</a>
+        <a href="https://ko-fi.com/synthymental" target="_blank">buy me a coffee <3</a>
     </footer>
 
     <script>
@@ -192,12 +192,12 @@
         // --- ОБНОВЛЕННЫЙ ОБЪЕКТ ПРЕСЕТОВ с colorMode ---
         const presets = {
             'floyd-steinberg':{name:'Floyd-Steinberg',weights:[7/16,3/16,5/16,1/16],threshold:127, colorMode: 0, description:'Classic error diffusion'},
-            'Anatoly':{name:'Anatoly',weights:[1/8,1/8,1/8,1/8],threshold:127, colorMode: 3, description:'Apple Macintosh style'},
-            'Baker':{name:'Baker',weights:[8/32,4/32,2/32,0],threshold:127, colorMode: 2, description:'Faster version of Floyd-Steinberg'},
-            'Gragas':{name:'Gragas',weights:[5/32,3/32,2/32,0],threshold:127, colorMode: 0, description:'Smooth error diffusion'},
-            'RedbullVodka':{name:'RedbullVodka',weights:[2/4,1/4,0,0],threshold:127, colorMode: 4, description:'Simplified Sierra'},
-            'Mentol':{name:'Mentol',weights:[8/42,4/42,2/42,0],threshold:127, colorMode: 3, description:'High-quality diffusion'},
-            'lox':{name:'lox',weights:[7/48,5/48,3/48,0],threshold:127, colorMode: 2, description:'Professional quality'},
+            'Anatoly':{name:'Anatoly',weights:[1,1/8,1/8,1/8],threshold:200, colorMode: 3, description:'Apple Macintosh style'},
+            'Baker':{name:'Baker',weights:[0,1,1/8,0],threshold:27, colorMode: 2, description:'Faster version of Floyd-Steinberg'},
+            'Gragas':{name:'Gragas',weights:[1,0,0,0],threshold:252, colorMode: 4, description:'Smooth error diffusion'},
+            'RedbullVodka':{name:'RedbullVodka',weights:[0.02,0.02,0.84,0],threshold:13, colorMode: 3, description:'Simplified Sierra'},
+            'Mentol':{name:'Kotik',weights:[0.23,0.64,0,0],threshold:254, colorMode: 3, description:'High-quality diffusion'},
+            'lox':{name:'Moh',weights:[0.72,0,0,0],threshold:127, colorMode: 1, description:'Professional quality'},
             'custom':{name:'Custom',weights:[0,0,0,0],threshold:127, colorMode: 0, description:'Use your own settings'} // colorMode для custom тоже можно задать по умолчанию
         };
 
