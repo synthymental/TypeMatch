@@ -1,5 +1,5 @@
 # SIGNAL  
-A generative visual tool by [synthymental](https://github.com/synthymental)
+A generative visual tool by [synthymental](synthymental.com/signal)
 
 **Signal** is an experimental generative art project that produces unique abstract visuals through procedural logic and randomness. Built with web technologies, it's designed as a creative playground for exploration and inspiration.
 
