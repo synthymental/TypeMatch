@@ -1,0 +1,187 @@
+/* Font Imports - остаются без изменений */
+@font-face { font-family: 'PP Mori'; src: url('/tmAssets/fonts/PPMori-SemiBold.woff') format('woff'); font-weight: normal; font-style: normal; }
+@font-face { font-family: 'Suisse Works Medium'; src: url('/tmAssets/fonts/Suisse-Works-Medium.otf') format('opentype');}
+@font-face { font-family: 'Druk Wide Medium'; src: url('/tmAssets/fonts/Druk-Wide-Medium-Desktop.otf') format('opentype');}
+@font-face { font-family: 'Le Murmure'; src: url('/tmAssets/fonts/le-murmure.ttf') format('truetype');}
+@font-face { font-family: 'Pilowlava Regular'; src: url('/tmAssets/fonts/Pilowlava-Regular.otf') format('opentype');}
+@font-face { font-family: 'Terminal Grotesque'; src: url('/tmAssets/fonts/terminal-grotesque.ttf') format('truetype');}
+
+
+html { height: 100%; box-sizing: border-box; }
+*, *:before, *:after { box-sizing: inherit; }
+
+body {
+  font-family: 'PP Mori', sans-serif;
+  cursor: url('img/cursor.png') 16 16, auto;
+  min-height: 100vh;
+  margin: 0;
+  padding: 15px; /* Уменьшим общий padding, чтобы больше места было для канваса */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Центрируем основное содержимое */
+  background-color: #1E1E1E; /* Начальная темная тема */
+  color: #E0E0E0;         /* Начальная темная тема */
+  letter-spacing: 0.3px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* Dark Theme specific (теперь это базовые стили, т.к. темная по умолчанию) */
+body a { color: #8ab4f8; }
+body .text-left-bottom,
+body .text-right-bottom { color: #aaaaaa; }
+body .text-left-bottom a,
+body .text-right-bottom a { color: #c0c0c0; }
+
+/* Styles for light theme when class is applied */
+body:not(.dark-theme) { /* Используем :not(), если .dark-theme будет удаляться для светлой */
+  background-color: #E4E4E4;
+  color: #333;
+}
+body:not(.dark-theme) a { color: black; }
+body:not(.dark-theme) .text-left-bottom,
+body:not(.dark-theme) .text-right-bottom { color: #505050; }
+body:not(.dark-theme) .text-left-bottom a,
+body:not(.dark-theme) .text-right-bottom a { color: black; }
+
+
+.game-header {
+  width: 100%;
+  max-width: 900px; /* Ширина хедера может быть привязана к ширине канваса */
+  display: flex;
+  justify-content: space-between; /* Таймер слева, счет справа */
+  align-items: center;
+  margin-bottom: 20px; /* Отступ до канваса */
+  padding: 0 10px; /* Небольшой горизонтальный padding */
+}
+
+.game-wrapper {
+  display: flex; /* Для центрирования #canvas-container */
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* Занимает всю доступную ширину */
+  /* max-width остается на body или можно задать для wrapper, если нужно */
+  margin-bottom: 25px; /* Отступ до нижнего UI */
+  /* background-color: rgba(0,255,0,0.05); */
+}
+
+#canvas-container {
+  /* flex: 1; */ /* Не нужен flex, если wrapper просто центрирует */
+  display: flex; /* Для центрирования самого p5 канваса, если он меньше */
+  justify-content: center;
+  align-items: center;
+  /* Размеры будут заданы p5.js, но можно установить min/max для контейнера,
+     чтобы он не схлопывался до того, как p5 задаст размер канвасу */
+  min-width: 300px;
+  min-height: 300px;
+  /* background-color: rgba(255,0,0,0.05); */
+}
+
+canvas {
+  display: block;
+  box-shadow: 0px 0px 15px rgba(255,255,255,0.05); /* Для темной темы */
+}
+body:not(.dark-theme) canvas {
+  box-shadow: 0px 0px 15px rgba(0,0,0,0.1); /* Для светлой темы */
+}
+
+/* Сайдбар удален */
+
+.game-ui-bottom {
+  width: 100%;
+  max-width: 900px; /* Согласовать с .game-header */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+  /* background-color: rgba(0,0,255,0.05); */
+}
+
+.ui-element {
+  padding: 10px 18px; /* Немного увеличим padding */
+  background-color: rgba(255,255,255,0.1); /* Для темной темы */
+  border-radius: 10px; /* Более скругленные углы */
+  font-size: clamp(17px, 2.2vw, 20px); /* Немного крупнее */
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+body:not(.dark-theme) .ui-element {
+  background-color: rgba(0,0,0,0.05); /* Для светлой темы */
+}
+
+.timer, .score { font-weight: bold; }
+
+.theme-button {
+  cursor: pointer; border: none;
+  font-size: clamp(22px, 2.8vw, 28px);
+  background-color: rgba(255,255,255,0.15); /* Для темной темы */
+  min-width: 55px; height: auto; line-height: 1; padding: 12px; border-radius: 10px;
+}
+body:not(.dark-theme) .theme-button {
+  background-color: rgba(0,0,0,0.1); /* Для светлой темы */
+}
+.theme-button:hover { background-color: rgba(255,255,255,0.25); } /* Для темной */
+body:not(.dark-theme) .theme-button:hover { background-color: rgba(0,0,0,0.15); } /* Для светлой */
+
+
+.font-info {
+  max-width: 450px;
+  text-align: left;
+  margin-left: 0; /* Если нужно чтобы он был слева */
+  /* margin-right: auto; */
+  font-size: clamp(12px, 1.6vw, 14px); /* Чуть крупнее */
+  padding: 12px;
+  background-color: rgba(255,255,255,0.08); /* Для темной */
+  border-radius: 10px;
+}
+body:not(.dark-theme) .font-info {
+  background-color: rgba(0,0,0,0.03); /* Для светлой */
+}
+.font-info-title { font-weight: bold; margin-top: 0; margin-bottom: 8px; }
+.font-info p { margin: 4px 0; line-height: 1.5; }
+
+/* Fixed Text at Bottom */
+.text-left-bottom, .text-right-bottom {
+  font-family: 'PP Mori', sans-serif; /* Ensure it uses the UI font */
+  position: fixed;
+  bottom: 10px; /* Slightly more space from bottom */
+  font-size: clamp(10px, 1.3vw, 12px);
+  color: #505050;
+  padding: 5px;
+  z-index: 10; /* Keep above other content if overlap occurs */
+  opacity: 0.8; /* Slightly less prominent */
+}
+.text-left-bottom {
+  left: 15px;
+}
+.text-right-bottom {
+  right: 15px;
+}
+/* Responsive Adjustments */
+@media (max-width: 920px) { /* Если ширина хедера/нижнего UI становится проблемой */
+    .game-header, .game-ui-bottom {
+        max-width: 95%; /* Позволяем им сужаться с экраном */
+    }
+}
+
+@media (max-width: 768px) {
+  body { justify-content: flex-start; padding: 10px; }
+  .game-header {
+    flex-direction: column; /* Таймер над счетом */
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  #canvas-container { min-height: 300px; /* Адаптируем мин. высоту */ }
+  .game-ui-bottom { flex-direction: column; align-items: center; gap: 15px; }
+  .font-info { width: 90%; max-width: none; text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .ui-element, .theme-button { padding: 8px 12px; font-size: clamp(14px, 3.5vw, 16px); }
+  .font-info { font-size: clamp(10px, 2.8vw, 12px); }
+  #canvas-container { min-height: 250px; }
+  .text-left-bottom, .text-right-bottom { font-size: 9px; bottom: 5px; left: 5px; right: 5px; text-align: center; }
+  .text-right-bottom { display: none; }
+}
