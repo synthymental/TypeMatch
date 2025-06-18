@@ -1,10 +1,17 @@
 let video;
 let detector;
-let detections = {};
-let idCount = 0;
+let detections = []; // Упростим detections до простого массива результатов для этого примера
+// let detections = {}; // Если вы хотите вернуть свою сложную систему, ее нужно будет адаптировать
+// let idCount = 0;
 
 let isModelReady = false;
 let isVideoReady = false;
+
+// Переменные для корректной отрисовки видео
+let drawVideoX = 0;
+let drawVideoY = 0;
+let drawVideoWidth = 0;
+let drawVideoHeight = 0;
 
 function modelIsReady() {
   console.log('Модель детектора объектов загружена!');
@@ -14,7 +21,9 @@ function modelIsReady() {
 
 function videoFeedIsReady() {
   console.log('Видеопоток готов и загрузил данные!');
+  console.log('Оригинальные размеры видео:', video.elt.videoWidth, video.elt.videoHeight);
   isVideoReady = true;
+  calculateVideoDrawParameters(); // Рассчитаем параметры отрисовки после готовности видео
   startDetectionIfAllReady();
 }
 
@@ -28,133 +37,139 @@ function startDetectionIfAllReady() {
   }
 }
 
-function setup() {
-  // Используем windowWidth и windowHeight для полноэкранного режима
-  createCanvas(windowWidth, windowHeight);
+// Рассчитывает параметры для отрисовки видео с сохранением пропорций
+function calculateVideoDrawParameters() {
+  if (!video || !video.elt || video.elt.videoWidth === 0 || video.elt.videoHeight === 0) {
+    console.warn("Размеры видео еще недоступны для расчета параметров отрисовки.");
+    return;
+  }
 
-  // Запрашиваем камеру.
-  // Для задней камеры телефона (обычно):
+  let videoW = video.elt.videoWidth;   // Фактическая ширина видеопотока
+  let videoH = video.elt.videoHeight;  // Фактическая высота видеопотока
+
+  let canvasW = width;   // Ширина холста (windowWidth)
+  let canvasH = height;  // Высота холста (windowHeight)
+
+  let canvasRatio = canvasW / canvasH;
+  let videoRatio = videoW / videoH;
+
+  if (videoRatio > canvasRatio) {
+    // Видео шире, чем холст. Масштабируем по ширине холста.
+    drawVideoWidth = canvasW;
+    drawVideoHeight = canvasW / videoRatio;
+  } else {
+    // Видео выше (или такое же соотношение), чем холст. Масштабируем по высоте холста.
+    drawVideoHeight = canvasH;
+    drawVideoWidth = canvasH * videoRatio;
+  }
+
+  // Центрируем видео на холсте
+  drawVideoX = (canvasW - drawVideoWidth) / 2;
+  drawVideoY = (canvasH - drawVideoHeight) / 2;
+
+  // console.log(`Canvas: ${canvasW}x${canvasH}, Video Original: ${videoW}x${videoH}`);
+  // console.log(`Draw Params: X=${drawVideoX}, Y=${drawVideoY}, W=${drawVideoWidth}, H=${drawVideoHeight}`);
+}
+
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  // pixelDensity(1); // Можно раскомментировать для отладки на устройствах с высокой плотностью
+
   const constraints = {
     video: {
-      facingMode: "environment" // "environment" для задней, "user" для передней
+      facingMode: "environment" // Задняя камера
+      // Для отладки на ПК можно убрать facingMode или использовать video: true
+      // width: { ideal: 1280 }, // Можно попробовать запросить определенное разрешение
+      // height: { ideal: 720 }
     },
-    audio: false // Аудио нам не нужно
+    audio: false
   };
-  // Для передней (селфи) камеры:
-  // const constraints = {
-  //   video: {
-  //     facingMode: "user"
-  //   },
-  //   audio: false
-  // };
 
-  video = createCapture(constraints, videoFeedIsReady);
-  video.size(width, height); // Устанавливаем размер видео равным размеру холста
-  video.hide(); // Скрываем HTML-элемент видео
+  video = createCapture(constraints, () => {
+    // Коллбэк createCapture вызывается, когда поток получен.
+    // video.elt.onloadedmetadata гарантирует, что videoWidth/videoHeight доступны.
+    video.elt.onloadedmetadata = () => {
+      videoFeedIsReady();
+    };
+    // На некоторых системах videoFeedIsReady может быть вызван и без onloadedmetadata,
+    // если данные уже доступны. Для надежности используем onloadedmetadata.
+    // Если onloadedmetadata не срабатывает, можно попробовать вызвать videoFeedIsReady здесь
+    // с проверкой video.elt.videoWidth > 0
+    if (video.elt.videoWidth > 0) {
+        videoFeedIsReady(); // Попытка на случай, если onloadedmetadata не вызовется, а данные есть
+    }
+  });
+  video.hide();
 
   detector = ml5.objectDetector('cocossd', modelIsReady);
 }
 
-// Эта функция вызывается, когда размер окна браузера изменяется
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  if (video) {
-    video.size(width, height); // Обновляем размер видео при изменении размера холста
+  if (isVideoReady) { // Пересчитываем параметры только если видео уже было инициализировано
+    calculateVideoDrawParameters();
   }
 }
 
 function gotDetections(error, results) {
   if (error) {
     console.error("Ошибка в gotDetections:", error);
+    // detector.detect(video, gotDetections); // Можно попробовать перезапустить, но осторожно
     return;
   }
-  // Ваша логика обработки detections
-  let labels = Object.keys(detections);
-  for (let label of labels) {
-    let objects = detections[label];
-    for (let object of objects) {
-      object.taken = false;
-    }
-  }
+  detections = results; // Сохраняем результаты (упрощенная версия)
 
-  for (let i = 0; i < results.length; i++) {
-    let object = results[i];
-    let label = object.label;
+  // Если вы вернете свою систему detections:
+  // Ваша логика обновления сложного объекта detections ...
 
-    if (detections[label]) {
-      let existing = detections[label];
-      if (existing.length == 0) {
-        object.id = idCount;
-        idCount++;
-        existing.push(object);
-        object.timer = 100;
-      } else {
-        let recordDist = Infinity;
-        let closest = null;
-        for (let candidate of existing) {
-          let d = dist(candidate.x, candidate.y, object.x, object.y);
-          if (d < recordDist && !candidate.taken) {
-            recordDist = d;
-            closest = candidate;
-          }
-        }
-        if (closest) {
-          let amt = 0.75;
-          closest.x = lerp(object.x, closest.x, amt);
-          closest.y = lerp(object.y, closest.y, amt);
-          closest.width = lerp(object.width, closest.width, amt);
-          closest.height = lerp(object.height, closest.height, amt);
-          closest.taken = true;
-          closest.timer = 100;
-          closest.confidence = object.confidence;
-        } else {
-          object.id = idCount;
-          idCount++;
-          existing.push(object);
-          object.timer = 100;
-        }
-      }
-    } else {
-      object.id = idCount;
-      idCount++;
-      detections[label] = [object];
-      object.timer = 100;
-    }
-  }
-
-  if (detector && video) {
+  if (detector && video && isVideoReady) { // Добавил isVideoReady
     detector.detect(video, gotDetections);
   }
 }
 
 function draw() {
-  if (!video || !isVideoReady) {
-    background(0); // Черный фон, пока видео не готово
+  background(0); // Заливаем фон черным (или любым другим цветом) для полей
+
+  if (!isVideoReady || !video.elt || video.elt.readyState < video.elt.HAVE_ENOUGH_DATA) {
     fill(255);
     textAlign(CENTER, CENTER);
     textSize(20);
     text("Загрузка камеры и модели...", width / 2, height / 2);
     return;
   }
-  // Рисуем видео на весь холст
-  image(video, 0, 0, width, height);
+  
+  // Рисуем видео с рассчитанными параметрами
+  image(video, drawVideoX, drawVideoY, drawVideoWidth, drawVideoHeight);
 
-  // Ваша логика отрисовки bounding boxes
-  let labels = Object.keys(detections);
-  for (let label of labels) {
-    let objects = detections[label];
-    for (let i = objects.length - 1; i >= 0; i--) {
-      let object = objects[i];
+  // Отрисовка bounding boxes
+  if (detections && detections.length > 0) {
+    for (let i = 0; i < detections.length; i++) {
+      let object = detections[i];
 
-      if (object.label === 'person') { // Ищем людей
+      if (object.label === 'person') {
         stroke(0, 255, 0);
         strokeWeight(4);
         noFill();
-        // Координаты от ml5.objectDetector могут быть нормализованы (0-1) или в пикселях.
-        // Для cocossd они обычно в пикселях относительно оригинального размера видео.
-        // Если видео растягивается на весь экран, эти координаты должны быть +/- правильными.
-        rect(object.x, object.y, object.width, object.height);
 
+        // Координаты от ml5 (object.x, object.y, object.width, object.height)
+        // относятся к оригинальному размеру видеопотока (video.elt.videoWidth, video.elt.videoHeight).
+        
+        let originalVideoW = video.elt.videoWidth;
+        let originalVideoH = video.elt.videoHeight;
+
+        if (originalVideoW === 0 || originalVideoH === 0) continue; // Пропускаем, если размеры еще неизвестны
+
+        // Масштабируем и смещаем координаты из оригинального видео в систему координат холста,
+        // учитывая, как видео было отрисовано.
+        let displayX = (object.x / originalVideoW) * drawVideoWidth + drawVideoX;
+        let displayY = (object.y / originalVideoH) * drawVideoHeight + drawVideoY;
+        let displayWidth = (object.width / originalVideoW) * drawVideoWidth;
+        let displayHeight = (object.height / originalVideoH) * drawVideoHeight;
+
+        rect(displayX, displayY, displayWidth, displayHeight);
+
+        // Отрисовка текста метки
         noStroke();
         fill(255);
         textSize(18); // Можно сделать размер текста адаптивным
@@ -164,13 +179,17 @@ function draw() {
 
         let textBgHeight = 22;
         let textBgWidth = textWidth(labelText) + 10;
-        let textY = object.y - 5;
-        let textX = object.x + 5;
+        let textY = displayY - 5; // Позиционируем относительно displayY
+        let textX = displayX + 5; // Позиционируем относительно displayX
         let textBgY = textY - textBgHeight + 5;
 
-        if (textBgY < 0) {
-            textBgY = object.y + 5;
-            textY = textBgY + textBgHeight - 5;
+        // Убедимся, что текст не выходит за пределы отрисованного видео сверху
+        if (textBgY < drawVideoY) {
+            textBgY = displayY + 5; // Внутри рамки сверху
+            if (textBgY + textBgHeight > displayY + displayHeight) { // Если не помещается, то чуть ниже рамки
+                 textBgY = displayY + displayHeight + 5;
+            }
+            textY = textBgY + textBgHeight - 8; // Скорректировать Y для текста
         }
         
         fill(0, 255, 0, 180);
@@ -179,11 +198,21 @@ function draw() {
         fill(0); // Черный текст
         text(labelText, textX, textY);
       }
+    }
+  }
 
-      object.timer -= 2; // Ваша логика таймера
-      if (object.timer < 0) {
+  // Если вы вернете свою систему detections с таймерами:
+  /*
+  let labels = Object.keys(detections);
+  for (let label of labels) {
+    let objects = detections[label];
+    for (let i = objects.length - 1; i >= 0; i--) {
+      let currentObject = objects[i]; // Используйте другое имя переменной
+      currentObject.timer -= 2;
+      if (currentObject.timer < 0) {
         objects.splice(i, 1);
       }
     }
   }
+  */
 }
