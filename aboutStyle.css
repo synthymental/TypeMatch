@@ -1,0 +1,173 @@
+/* Basic Reset & Font Setup */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    background-color: #000000; /* Black background */
+    color: #ffffff; /* White text */
+    font-family: 'Inter', sans-serif; /* Inter font */
+    line-height: 1.6;
+}
+
+/* Header Styling */
+.top-header {
+    text-align: center; /* Centers the link */
+    padding: 20px 10px; /* Adds some space around */
+}
+
+.logo-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px; /* Slightly smaller than main text */
+    font-weight: regular; /* Regular weight for the logo */
+    transition: color 0.3s ease; /* Smooth color transition */
+    display: inline-block; /* Allows padding to work nicely */
+}
+
+/* Main Content Layout */
+.content-container {
+    display: flex; /* Creates the two-column layout */
+    align-items: center; /* Vertically aligns items in the center */
+    justify-content: center; /* Horizontally centers the content columns */
+    padding: 10% 20px; /* Adds padding around the main content */
+    gap: 40px; /* Space between the image and text columns */
+    max-width: 1200px; /* Limits the maximum width */
+    margin: 20px auto; /* Centers the container on the page */
+}
+
+/* Image Column */
+.image-column {
+    flex: 1; /* Takes up available space */
+    max-width: 400px; /* Max width for the image container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-column img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image covers the circular area well */
+    aspect-ratio: 1 / 1; /* Makes it a perfect circle container */
+    /* Note: The fisheye effect is part of the image itself, not CSS */
+}
+
+/* Text Column */
+.text-column {
+    margin-top: 30px;
+    flex: 1.5; /* Takes up slightly more space than the image */
+    max-width: 700px; /* Max width for the text container */
+    display: flex;
+    flex-direction: column; /* Stacks text block and links vertically */
+    gap: 25px; /* Space between text block and links */
+}
+
+/* Text Block Styling */
+.text-block {
+    background-color: #161616; /* Dark grey background like the example */
+    border: #242424 solid 1px; /* Slightly lighter border */
+    padding: 30px;
+    border-radius: 32px; /* Rounded corners */
+}
+
+.text-block p {
+    font-size: 19px;
+     /* Adjusted font size for better readability, 24px can be large for paragraphs */
+    /* If you strictly want 24px: font-size: 24px; */
+    line-height: 1.3; /* Improves readability */
+}
+
+/* Links Container */
+.links-container {
+    
+    max-width: 700px;
+    display: flex;
+    flex-wrap: wrap; /* Allows buttons to wrap on smaller screens */
+    gap: 25px; /* Space between buttons */
+}
+
+/* Individual Link/Button Styling */
+.social-link {
+    color: #cecece;
+    text-decoration: none;
+    border: 1px solid #242424; /* White border */
+    padding: 6px 36px; /* Button padding */
+    border-radius: 30px; /* Rounded corners for buttons */
+    font-size: 20px; /* Smaller font size for buttons */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth hover effect */
+    text-align: center;
+}
+
+.social-link:hover {
+    background-color: #ffffff; /* White background on hover */
+    color: #000000; /* Black text on hover */
+}
+
+/* --- Responsive Design --- */
+
+/* For Tablets and smaller devices */
+@media (max-width: 768px) {
+    .content-container {
+        flex-direction: column; /* Stack image and text vertically */
+        text-align: center; /* Center text within the column */
+        padding: 20px 15px;
+        gap: 30px;
+    }
+
+    .image-column {
+        max-width: 250px; /* Smaller image on tablets */
+        margin-bottom: 20px; /* Add space below image */
+    }
+
+    .text-column {
+        max-width: 90%; /* Allow text column to take more width */
+        align-items: center; /* Center the links container */
+    }
+
+     .text-block {
+        padding: 20px;
+    }
+
+    .text-block p {
+       font-size: 18px; /* Slightly smaller text */
+       /* If you strictly want 24px: font-size: 24px; */
+    }
+
+    .links-container {
+        justify-content: center; /* Center the buttons */
+    }
+}
+
+/* For Mobile phones */
+@media (max-width: 480px) {
+     .top-header {
+        padding: 15px 10px;
+    }
+     .logo-link {
+        font-size: 18px;
+    }
+
+    .image-column {
+        max-width: 200px; /* Even smaller image */
+    }
+
+    .text-block p {
+       font-size: 16px; /* Further reduce text size */
+       /* If you strictly want 24px: font-size: 24px; */
+    }
+
+    .social-link {
+        padding: 6px 15px;
+        font-size: 14px;
+    }
+
+     .links-container {
+        gap: 10px;
+    }
+}
