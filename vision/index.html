@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <title>Vision v1</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: row;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 320px;
+            flex-shrink: 0;
+            background-color: #161616;
+            border-right: 1px solid #242424;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-bottom: 6px;
+            text-align: center;
+            color: #eee;
+            padding-bottom: 15px;
+        }
+        
+        h4 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #ccc;
+            margin-bottom: 5px;
+            margin-top: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-group label, .checkbox-label, .color-label {
+            font-size: 14px;
+            color: #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .control-group label span {
+            font-family: monospace;
+            color: #fff;
+            background-color: #292929;
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        
+        .button-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        button, .btn-label {
+            background-color: #3a3a3a;
+            border: 1px solid #555;
+            color: #ddd;
+            height: 40px;
+            width: 100%;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 32px;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+            padding: 0 15px;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-align: center;
+        }
+        
+        button:hover, .btn-label:hover {
+            background-color: #4f4f4f;
+            border-color: #777;
+        }
+        
+        button:disabled, button:disabled:hover,
+        .btn-label.disabled, .btn-label.disabled:hover {
+            background-color: #2a2a2a;
+            border-color: #444;
+            color: #777;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        #btn-export-video {
+            background-color: #2854a1;
+            border-color: #3e6ecf;
+            color: white;
+        }
+        #btn-export-video:hover {
+            background-color: #3166b8;
+            border-color: #4f80e0;
+        }
+        #btn-export-video.processing {
+            background-color: #e53935;
+            border-color: #f44336;
+        }
+        #btn-export-video.processing:hover {
+             background-color: #c62828;
+            border-color: #e53935;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        input[type="range"] {
+            --slider-fill-color: #6B6B6B; --slider-track-color: #292929;
+            -webkit-appearance: none; appearance: none; width: 100%; height: 30px;
+            border-radius: 30px; outline: none;
+            background: linear-gradient(to right, var(--slider-fill-color) 0%, var(--slider-fill-color) 50%, var(--slider-track-color) 50%, var(--slider-track-color) 100%);
+            margin-top: 4px; cursor: pointer; transition: background 0.1s ease-in-out;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; height: 30px; width: 30px;
+            background: var(--slider-fill-color); border-radius: 50%; cursor: pointer;
+        }
+        
+        input[type="color"] {
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            width: 40px; height: 30px; background-color: transparent;
+            border: 1px solid #555; border-radius: 6px; cursor: pointer;
+            padding: 2px;
+        }
+        input[type="color"]::-webkit-color-swatch { border-radius: 4px; border: none; }
+        input[type="color"]::-moz-color-swatch { border-radius: 4px; border: none; }
+        
+        .hidden { display: none !important; }
+
+        #object-checkboxes {
+             max-height: 250px; overflow-y: auto; background-color: #202020;
+             padding: 10px; border-radius: 8px; scrollbar-width: thin;
+             scrollbar-color: #444 #202020; display: flex; flex-direction: column; gap: 8px;
+        }
+        .object-control-row { display: flex; align-items: center; justify-content: space-between; }
+        
+        .checkbox-label { padding: 0; justify-content: flex-start; }
+        .checkbox-label.disabled { color: #666; cursor: not-allowed; }
+        .checkbox-label input { margin-right: 8px; transform: scale(1.1); accent-color: #4CAF50; }
+
+        #canvas-container {
+            flex-grow: 1; display: flex; justify-content: center;
+            align-items: center; height: 100vh;
+        }
+        #canvas-container canvas {
+            max-width: 100%; max-height: 100%;
+            object-fit: contain; display: block;
+        }
+
+        @media (max-width: 900px) {
+            body { flex-direction: column; height: auto; }
+            #controls { width: 100%; height: auto; max-height: 50vh; border-right: none; border-bottom: 1px solid #242424; }
+            #canvas-container { width: 100%; height: auto; min-height: 40vh; flex-grow: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <h3>Vision v1</h3>
+
+        <div class="control-group">
+            <h4>Source</h4>
+            <div class="button-row">
+                <button id="btn-webcam">Use Webcam</button>
+                <label for="video-upload" id="btn-upload-label" class="btn-label">Upload Video</label>
+                <input type="file" id="video-upload" accept="video/*">
+                <label for="image-upload" id="btn-upload-image-label" class="btn-label">Upload Image</label>
+                <input type="file" id="image-upload" accept="image/*">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h4>Objects to Detect</h4>
+            <div id="object-checkboxes"></div>
+        </div>
+        
+        <div class="control-group">
+            <h4>Display Settings</h4>
+            <div class="color-label">
+                <span>Background Color:</span>
+                <input type="color" id="bg-color-picker" value="#1a1a1a">
+            </div>
+            <label for="stroke-weight-slider">Box & Font Size: <span id="stroke-weight-value">1</span></label>
+            <input type="range" id="stroke-weight-slider" min="1" max="20" value="1">
+            <div class="checkbox-label">
+                <input type="checkbox" id="show-confidence-toggle" checked> Show confidence %
+            </div>
+            <div class="checkbox-label">
+                <input type="checkbox" id="cutout-toggle"> Cutout Mode
+            </div>
+            <div class="checkbox-label disabled" id="cutout-border-label">
+                <input type="checkbox" id="cutout-border-toggle" checked> Show boxes in cutout
+            </div>
+        </div>
+
+        <div class="control-group">
+            <h4>Export</h4>
+            <div class="button-row">
+                <button id="btn-export-video">Process & Export Video</button>
+                <button id="btn-export-image">Export as Image</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="canvas-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.getElementById('stroke-weight-slider');
+            const updateSliderBackground = () => {
+                if (!slider) return; const min = slider.min; const max = slider.max; const val = slider.value;
+                const percentage = (val - min) * 100 / (max - min);
+                slider.style.background = `linear-gradient(to right, var(--slider-fill-color) 0%, var(--slider-fill-color) ${percentage}%, var(--slider-track-color) ${percentage}%, var(--slider-track-color) 100%)`;
+            };
+            slider.addEventListener('input', updateSliderBackground);
+            updateSliderBackground();
+        });
+    </script>
+    <script src="sketch.js"></script>
+</body>
+</html>
