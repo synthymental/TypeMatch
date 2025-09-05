@@ -1,5 +1,5 @@
 function sketch(p) {
-    // --- Глобальные переменные ---
+    
     let originalImg;
     let myFont;
     let isDirty = true;
@@ -125,11 +125,11 @@ function sketch(p) {
     function updateTextColor() { const isLightTheme = document.body.classList.contains('light-theme'); const themeTextColor = isLightTheme ? '#1a1a1a' : '#f0f0f0'; const themeBgColor = isLightTheme ? '#f0f0f0' : '#1a1a1a'; textColor = isTextColorCustom ? themeBgColor : themeTextColor; }
     function toggleTheme() { const body = document.body; body.classList.toggle('light-theme'); bgColor = body.classList.contains('light-theme') ? '#f0f0f0' : '#1a1a1a'; isTextColorCustom = false; updateTextColor(); isDirty = true; p.redraw(); }
     
-    // --- Функции экспорта ---
+    
     function exportPNG() { if (!originalImg || !imgDrawParams) return; const exportPG = p.createGraphics(imgDrawParams.width, imgDrawParams.height); const filteredGraphics = getFilteredImageGraphics(); if (showOriginal) { exportPG.image(originalImg, 0, 0, exportPG.width, exportPG.height); } exportPG.textFont(myFont); exportPG.textAlign(p.CENTER, p.CENTER); exportPG.fill(textColor); const cellHeight = parseInt(cellSizeSlider.value()); const cellWidth = cellHeight * 0.8; exportPG.textSize(cellHeight * 0.9); for (let y = 0; y < exportPG.height; y += cellHeight) { for (let x = 0; x < exportPG.width; x += cellWidth) { const sourceX = imgDrawParams.x + x + cellWidth / 2; const sourceY = imgDrawParams.y + y + cellHeight / 2; const c = filteredGraphics.get(sourceX, sourceY); const brightness = p.brightness(c); const charToDraw = getAsciiChar(brightness); exportPG.text(charToDraw, x + cellWidth / 2, y + cellHeight / 2); } } p.save(exportPG, 'exf-studio-art.png'); }
     function exportSVG() { if (!originalImg || !imgDrawParams) return; const filteredGraphics = getFilteredImageGraphics(); const cellHeight = parseInt(cellSizeSlider.value()); const cellWidth = cellHeight * 0.8; let svgData = `<svg width="${imgDrawParams.width}" height="${imgDrawParams.height}" xmlns="http://www.w3.org/2000/svg" style="background-color:${bgColor};">`; svgData += `<style> .ascii { font-family: '${myFont.font.names.fontFamily.en}', monospace; font-size: ${cellHeight * 0.9}px; fill: ${textColor}; text-anchor: middle; alignment-baseline: middle; } </style>`; for (let y = 0; y < imgDrawParams.height; y += cellHeight) { for (let x = 0; x < imgDrawParams.width; x += cellWidth) { const sourceX = imgDrawParams.x + x + cellWidth / 2; const sourceY = imgDrawParams.y + y + cellHeight / 2; const c = filteredGraphics.get(sourceX, sourceY); const brightness = p.brightness(c); const charToDraw = getAsciiChar(brightness); svgData += `<text x="${x + cellWidth / 2}" y="${y + cellHeight / 2}" class="ascii">${charToDraw}</text>`; } } svgData += '</svg>'; const blob = new Blob([svgData], { type: 'image/svg+xml' }); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = 'exf-studio-art.svg'; document.body.appendChild(link); link.click(); document.body.removeChild(link); }
 
-    // НОВАЯ ФУНКЦИЯ: Экспорт в текстовый файл
+   
     function exportTXT() {
         if (!originalImg || !imgDrawParams) return;
 
@@ -139,7 +139,7 @@ function sketch(p) {
         
         let textLines = [];
 
-        // Проходимся по сетке, соответствующей изображению
+        
         for (let y = 0; y < imgDrawParams.height; y += cellHeight) {
             let currentRow = '';
             for (let x = 0; x < imgDrawParams.width; x += cellWidth) {
