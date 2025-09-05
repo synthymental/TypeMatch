@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXF.STUDIO - ASCII GEN</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="data/favicon.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+</head>
+<body>
+
+    <div class="app-container" id="app-container">
+        <!-- Панель управления -->
+        <div class="controls-panel">
+            <div class="header">
+                <img src="data/logoW.svg" alt="Logo" class="header-logo logo-white">
+                <img src="data/logoB.svg" alt="Logo" class="header-logo logo-black">
+            </div>
+
+            <div class="controls-wrapper">
+                <div class="control-section is-open">
+                    <div class="control-section-header">
+                        <div class="header-title-group">
+                            <!-- ИЗМЕНЕНИЕ: Имена файлов поменялись местами -->
+                            <img src="data/uploadB.svg" class="header-icon icon-white">
+                            <img src="data/uploadW.svg" class="header-icon icon-black">
+                            <strong>Upload an Image</strong>
+                        </div>
+                        <div class="toggle-icon">
+                            <!-- ИЗМЕНЕНИЕ: Имена файлов поменялись местами -->
+                            <img src="data/arrowB.svg" class="icon-white">
+                            <img src="data/arrowW.svg" class="icon-black">
+                        </div>
+                    </div>
+                    <div class="control-section-content">
+                        <input type="file" id="file-input" accept="image/*" style="display: none;">
+                        <div id="upload-box" class="upload-area">
+                            <span>Drag & drop or click.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <div class="action-buttons-grid">
+                        <button class="control-button" id="toggle-preview-btn">Preview</button>
+                        <button class="control-button" id="invert-btn">Invert</button>
+                        <button class="control-button" id="color-btn">Color</button>
+                        <button class="control-button" id="reset-btn">Reset</button>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <div class="control-section-header">
+                        <div class="header-title-group">
+                            <!-- ИЗМЕНЕНИЕ: Имена файлов поменялись местами -->
+                            <img src="data/adjB.svg" class="header-icon icon-white">
+                            <img src="data/adjW.svg" class="header-icon icon-black">
+                            <strong>Adjustment</strong>
+                        </div>
+                        <div class="toggle-icon">
+                            <!-- ИЗМЕНЕНИЕ: Имена файлов поменялись местами -->
+                            <img src="data/arrowB.svg" class="icon-white">
+                            <img src="data/arrowW.svg" class="icon-black">
+                        </div>
+                    </div>
+                    <div class="control-section-content">
+                        <div class="slider-group"><label for="cell-size-slider">Cell Size: <span id="cell-size-value">12</span></label><input type="range" id="cell-size-slider" min="5" max="50" value="12" step="1"></div>
+                        <div class="slider-group"><label for="empty-threshold-slider">Empty Threshold: <span id="empty-threshold-value">25</span></label><input type="range" id="empty-threshold-slider" min="0" max="100" value="25"></div>
+                        <div class="slider-group"><label for="f-threshold-slider">F Threshold: <span id="f-threshold-value">50</span></label><input type="range" id="f-threshold-slider" min="0" max="100" value="50"></div>
+                        <div class="slider-group"><label for="e-threshold-slider">E Threshold: <span id="e-threshold-value">75</span></label><input type="range" id="e-threshold-slider" min="0" max="100" value="75"></div>
+                        <div class="slider-group"><label for="brightness-slider">Brightness: <span id="brightness-value">100</span>%</label><input type="range" id="brightness-slider" min="0" max="200" value="100"></div>
+                        <div class="slider-group"><label for="contrast-slider">Contrast: <span id="contrast-value">100</span>%</label><input type="range" id="contrast-slider" min="0" max="200" value="100"></div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <div class="control-section-header">
+                        <div class="header-title-group">
+                             <!-- ИЗМЕНЕНИЕ: Имена файлов поменялись местами -->
+                             <img src="data/exportB.svg" class="header-icon icon-white">
+                             <img src="data/exportW.svg" class="header-icon icon-black">
+                            <strong>Export</strong>
+                        </div>
+                        <div class="toggle-icon">
+                            <!-- ИЗМЕНЕНИЕ: Имена файлов поменялись местами -->
+                            <img src="data/arrowB.svg" class="icon-white">
+                            <img src="data/arrowW.svg" class="icon-black">
+                        </div>
+                    </div>
+                    <div class="control-section-content">
+                        <div class="export-buttons">
+                            <button id="export-svg-btn">SVG</button>
+                            <button id="export-png-btn">PNG</button>
+                            <button id="export-txt-btn">TXT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button class="mobile-menu-toggle">Menu</button>
+        <div id="theme-switcher"></div>
+    </div>
+
+    <script src="sketch.js"></script>
+
+</body>
+</html>

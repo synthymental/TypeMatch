@@ -1,0 +1,160 @@
+/* Подключаем кастомный шрифт для всего UI */
+@font-face {
+    font-family: 'Favorit Mono';
+    src: url('data/ABCFavoritMonoVariable-Trial.ttf') format('truetype');
+    font-weight: 100 100;
+}
+
+:root {
+    --bg-color: #1E1E1E;
+    --text-color: #CECECE;
+    --panel-bg: #2a2a2a;
+    --border-color: #444;
+    --accent-color: #fff;
+    --font-family: 'Favorit Mono', monospace;
+    --secondary-text-color: #787878;
+}
+
+.light-theme {
+    --bg-color: #f0f0f0;
+    --text-color: #1E1E1E;
+    --panel-bg: #CECECE;
+    --border-color: #ccc;
+    --accent-color: #000;
+    --secondary-text-color: #8d8d8d;
+}
+
+body {
+    margin: 0; padding: 0;
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden;
+    font-variation-settings: 'wght' 100;
+    font-size: 14px; 
+}
+
+body::before {
+    content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuOCIgbnVtT2N0YXZlcz0iMyIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNub2lzZSkiIG9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==');
+    z-index: -1;
+}
+
+.app-container {
+    position: relative;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
+
+.controls-panel {
+    position: absolute; top: 0; left: 0; z-index: 2;
+    width: 350px;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    background-color: transparent;
+}
+
+.controls-wrapper { display: flex; flex-direction: column; gap: 12px; }
+.mobile-menu-toggle { display: none; }
+
+.control-section {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    border: 1px solid var(--bg-color);
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.header {
+    background-color: var(--text-color);
+    border: 1px solid var(--bg-color);
+    padding: 10px 15px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-logo { height: 20px;padding: 10px; width: auto; }
+.logo-black { display: none; }
+.light-theme .logo-white { display: none; }
+.light-theme .logo-black { display: block; }
+
+.header-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-icon {
+    height: 14px;
+    width: auto;
+}
+
+/* Общая логика переключения для всех иконок */
+.icon-black { display: inline-block; }
+.icon-white { display: none; }
+.light-theme .icon-black { display: none; }
+.light-theme .icon-white { display: inline-block; }
+
+.upload-area { border: 2px dashed var(--bg-color); border-radius: 12px; padding: 30px 15px; text-align: center; color: var(--secondary-text-color); cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
+.upload-area.drag-over { background-color: rgba(0, 0, 0, 0.1); border-color: var(--bg-color); }
+.control-button { width: 100%; padding: 10px; background-color: var(--text-color); border: 1px solid var(--bg-color); border-radius: 8px; color: var(--bg-color); cursor: pointer; text-align: left; transition: background-color 0.2s, color 0.2s; font-family: var(--font-family); }
+.control-button:hover { background-color: var(--bg-color); color: var(--text-color); }
+.export-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.export-buttons button { padding: 10px; background-color: var(--text-color); border: 1px solid var(--bg-color); border-radius: 12px; color: var(--bg-color); cursor: pointer; transition: background-color 0.2s, color 0.2s; font-family: var(--font-family); }
+.export-buttons button:hover { background-color: var(--bg-color); color: var(--text-color); }
+.slider-group { margin-bottom: 10px; }
+.slider-group label { display: block; color: var(--secondary-text-color); margin-bottom: 5px; font-size: 13px; }
+input[type="range"] { width: 100%; background: transparent; -webkit-appearance: none; appearance: none; height: 24px; }
+input[type="range"]::-webkit-slider-runnable-track { height: 2px; background: var(--secondary-text-color); border-radius: 1px; }
+input[type="range"]::-moz-range-track { height: 2px; background: var(--secondary-text-color); border-radius: 1px; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; background: var(--bg-color); border: 1px solid var(--secondary-text-color); border-radius: 50%; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15); margin-top: -7px; transition: background 0.2s; }
+input[type="range"]:focus::-webkit-slider-thumb { outline: none; }
+input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; background: var(--bg-color); border: 1px solid var(--secondary-text-color); border-radius: 50%; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: background 0.2s; }
+input[type="range"]:focus::-moz-range-thumb { outline: none; }
+#theme-switcher { position: absolute; top: 20px; right: 20px; width: 24px; height: 24px; background-color: var(--text-color); border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-color); z-index: 3; }
+.control-section-header { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 5px 0; }
+
+/* ИЗМЕНЕНИЕ: Стилизуем иконку-стрелку */
+.toggle-icon {
+    transition: transform 0.3s ease-in-out;
+    transform-origin: center;
+    /* Центрируем img внутри div */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ИЗМЕНЕНИЕ: Задаем размер для SVG-стрелки */
+.toggle-icon img {
+    height: 10px;
+    width: auto;
+}
+
+/* ИЗМЕНЕНИЕ: Поворачиваем на 90 градусов */
+.control-section.is-open .toggle-icon {
+    transform: rotate(90deg);
+}
+
+.control-section-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out; padding: 0 10px; }
+.control-section.is-open .control-section-content { max-height: 500px; padding: 15px 10px; }
+.control-section.is-open .control-section-content > *:first-child { margin-top: 0; }
+.control-section-content .upload-area { padding: 20px 10px; }
+.action-buttons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.action-buttons-grid .control-button { width: 100%; text-align: center; padding: 10px 5px; }
+
+
+@media (max-width: 768px) {
+    .controls-panel { top: auto; bottom: 0; left: 0; width: 100%; height: auto; max-height: 90vh; transform: translateY(100%); padding-bottom: 20px; transition: transform 0.3s ease-in-out; background-color: var(--text-color); color: var(--bg-color); border-top: 1px solid var(--bg-color); }
+    .controls-panel.is-mobile-open { transform: translateY(0); }
+    .controls-panel .header { display: none; }
+    .mobile-menu-toggle { display: block; position: absolute; top: 20px; left: 20px; z-index: 3; padding: 10px 20px; background-color: var(--text-color); color: var(--bg-color); border: 1px solid var(--bg-color); border-radius: 12px; font-family: var(--font-family); cursor: pointer; }
+    #theme-switcher { top: 20px; right: 20px; }
+}
