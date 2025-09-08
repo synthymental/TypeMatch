@@ -152,9 +152,56 @@ input[type="range"]:focus::-moz-range-thumb { outline: none; }
 
 
 @media (max-width: 768px) {
-    .controls-panel { top: auto; bottom: 10%; left: 0; width: 40%; height: auto; max-height: 90vh; transform: translateY(100%); padding-bottom: 20px; transition: transform 0.3s ease-in-out; background-color: var(--text-color); color: var(--bg-color); border-top: 1px solid var(--bg-color); }
-    .controls-panel.is-mobile-open { transform: translateY(0); }
-    .controls-panel .header { display: none; }
-    .mobile-menu-toggle { display: block; position: absolute; top: 20px; left: 20px; z-index: 3; padding: 10px 20px; background-color: var(--text-color); color: var(--bg-color); border: 1px solid var(--bg-color); border-radius: 12px; font-family: var(--font-family); cursor: pointer; }
-    #theme-switcher { top: 20px; right: 20px; }
+    .controls-panel {
+        /* ИЗМЕНЕНИЕ: Привязываем панель к верху */
+        top: 0;
+        bottom: auto;
+        left: 15%;
+        width: 80%;
+        height: auto;
+        max-height: 90vh;
+        
+        /* ИЗМЕНЕНИЕ: Скругляем нижние углы */
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+        border-bottom: 1px solid var(--bg-color);
+        
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        
+        /* ИЗМЕНЕНИЕ: Меняем точку трансформации и направление */
+        transform-origin: top center;
+        transform: translateY(-100%) scale(0.75); /* Прячем панель сверху */
+        transition: transform 0.35s ease-in-out;
+    }
+    
+    .controls-panel.is-mobile-open {
+        /* ИЗМЕНЕНИЕ: Показываем панель, сдвигая ее вниз */
+        transform: translateY(0) scale(0.75);
+    }
+
+    .controls-panel .header {
+        display: none;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        bottom: auto;
+        z-index: 3;
+        padding: 10px 20px;
+        background-color: var(--text-color);
+        color: var(--bg-color);
+        border: 1px solid var(--bg-color);
+        border-radius: 12px;
+        font-family: var(--font-family);
+        cursor: pointer;
+    }
+
+    #theme-switcher {
+        top: 20px;
+        right: 20px;
+    }
 }
