@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coral Text Animation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- ВАШИ CSS СТИЛИ --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; overflow: hidden; }
+        body { background-color: #000; font-family: 'Inter', sans-serif; color: #fff; display: flex; }
+        .sidebar { display: flex; flex-direction: column; gap: 16px; width: 400px; flex-shrink: 0; padding: 20px; height: 100vh; overflow-y: auto; background-color: #0a0a0a; }
+        .controls-block { background-color: #161616; border: 1px solid #242424; border-radius: 16px; padding: 20px; width: 100%; display: flex; flex-direction: column; gap: 10px; }
+        .controls-block h2 { font-size: 16px; margin-bottom: 6px; text-align: center; color: #eee; font-weight: 500;}
+        .control-group { display: flex; flex-direction: column; }
+        .control-group label { font-size: 14px; color: #ccc; margin-bottom: 1px; margin-top: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .control-group label span { font-family: monospace; color: #fff; background-color: #292929; padding: 2px 6px; border-radius: 5px; font-size: 12px; }
+        input[type="range"] { --slider-fill-color: #6B6B6B; --slider-track-color: #292929; -webkit-appearance: none; appearance: none; width: 100%; height: 24px; border-radius: 24px; outline: none; background: linear-gradient(to right, var(--slider-fill-color) 0%, var(--slider-fill-color) 50%, var(--slider-track-color) 50%, var(--slider-track-color) 100%); margin-top: 8px; cursor: pointer; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; height: 24px; width: 24px; background: #6B6B6B  ; border-radius: 50%; cursor: pointer; border: 4px solid var(--slider-fill-color); }
+        input[type="range"]::-moz-range-track { height: 24px; border-radius: 24px; }
+        .button-row { display: flex; gap: 10px; margin-top: 10px; }
+        .button-row button, .action-button { flex: 1; background-color: #2a2a2a; border: 1px solid #444; color: #ddd; height: 40px; font-size: 14px; cursor: pointer; border-radius: 12px; transition: background-color 0.2s, border-color 0.2s; padding: 0 15px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .button-row button:hover, .action-button:hover { background-color: #3f3f3f; border-color: #666; }
+        .button-row button.primary, .action-button.primary { background-color: #6B6B6B; color: #fff; border-color: #888; }
+        .button-row button.primary:hover, .action-button.primary:hover { background-color: #818181; border-color: #aaa; }
+        /* НОВЫЙ СТИЛЬ для активных кнопок-переключателей */
+        .button-row button.active { background-color: #6B6B6B; color: #fff; border-color: #888; }
+        .canvas-area { flex-grow: 1; display: flex; justify-content: center; align-items: center; background-color: #000; position: relative; height: 100vh; }
+        #canvas-container canvas { max-width: 100%; max-height: 100%; display: block; padding: 20px;}
+        .text-input-group { display: flex; gap: 10px; }
+        .text-input-group input[type="text"] { flex-grow: 1; background-color: #242424; border: 1px solid #3a3a3a; border-radius: 8px; color: #fff; padding: 0 12px; font-size: 14px; height: 40px; }
+        @media (max-width: 800px) { body { flex-direction: column; overflow: auto; height: auto;} .sidebar { width: 100%; height: auto; order: 2; } .canvas-area { width: 100%; height: 60vh; order: 1; } }
+    </style>
+</head>
+<body>
+    <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
+    <div class="sidebar" id="sidebar">
+        
+        <div class="controls-block">
+            <h2>Text & Font</h2>
+            <div class="control-group">
+                <label for="textInput">Text</label>
+                <div class="text-input-group">
+                    <input type="text" id="textInput" value="METAL">
+                    <button id="renderBtn" class="action-button primary">Render</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="fontSizeSlider">Font Size <span id="fontSizeValue">200</span></label>
+                <input type="range" id="fontSizeSlider" min="50" max="500" value="200" step="1">
+            </div>
+        </div>
+
+        <div class="controls-block">
+            <h2>Visuals</h2>
+            <div class="control-group">
+                <label for="colorPicker">Color</label>
+                <input type="color" id="colorPicker" value="#FFFFFF" style="width: 100%; height: 40px; border-radius: 8px;">
+            </div>
+            <div class="control-group">
+                <label for="strokeWidthSlider">Stroke Width <span id="strokeWidthValue">1.0</span></label>
+                <input type="range" id="strokeWidthSlider" min="1" max="20" value="1" step="0.5">
+            </div>
+            <!-- ИЗМЕНЕН БЛОК: Заменили чекбоксы на кнопки -->
+            <div class="button-row">
+                 <button id="fillToggleBtn">Fill Mode</button>
+                 <button id="echoToggleBtn">echo</button>
+            </div>
+        </div>
+
+        <div class="controls-block">
+            <h2>Physics</h2>
+            <!-- Остальные слайдеры без изменений -->
+            <div class="control-group">
+                <label for="growthSpeedSlider">Growth Speed <span id="growthSpeedValue">0.3</span></label>
+                <input type="range" id="growthSpeedSlider" min="0" max="5" value="0.1" step="0.1">
+            </div>
+            <div class="control-group">
+                <label for="noiseAmountSlider">Noise Amount <span id="noiseAmountValue">0.5</span></label>
+                <input type="range" id="noiseAmountSlider" min="0" max="5" value="0.5" step="0.1">
+            </div>
+            <div class="control-group">
+                <label for="repulsionStrengthSlider">Repulsion Strength <span id="repulsionStrengthValue">0.06</span></label>
+                <input type="range" id="repulsionStrengthSlider" min="0" max="2" value="0.06" step="0.001">
+            </div>
+            <div class="control-group">
+                <label for="repulsionRadiusSlider">Repulsion Radius <span id="repulsionRadiusValue">30</span></label>
+                <input type="range" id="repulsionRadiusSlider" min="5" max="100" value="30" step="1">
+            </div>
+            <div class="control-group">
+                <label for="curveTightnessSlider">Curve Tightness <span id="curveTightnessValue">0.2</span></label>
+                <input type="range" id="curveTightnessSlider" min="-2.0" max="2.0" value="0.2" step="0.1">
+            </div>
+        </div>
+        
+        <div class="controls-block">
+             <h2>Actions</h2>
+             <div class="button-row">
+                <button id="resetBtn">Reset</button>
+                <button id="saveBtn" class="primary">Save PNG</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- КОНТЕЙНЕР ДЛЯ ХОЛСТА -->
+    <div class="canvas-area" id="canvas-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script src="coral.js"></script>
+</body>
+</html>
