@@ -214,11 +214,10 @@ function sketch(p) {
         } else {
             // Инвертированный режим
             if (isNormallyEmpty) {
-                // Если было пусто, заполняем символами в обратном порядке
-                // Самые темные (были '.') становятся 'X', остальные (были ' ') становятся 'E'
-                if (t_dot > 0 && brightness < t_dot) return 'X';
-                if (brightness < t_e) return '.';
-                return 'E'; // Или F, если хотите другой вид
+               if (t_dot > 0 && brightness < t_dot) return '.';
+                if (brightness < t_e/5) return 'E';
+                if (brightness < t_f/3) return 'F';              
+                return 'X' // Или F, если хотите другой вид
             } else {
                 // Если был символ, становится пусто
                 return ' ';
