@@ -3,7 +3,7 @@ const wasm = await import('./wasm-lib/CavalryWasm.js')
 // Configure and create the module instance
 const module = await wasm.default({
 	// Tells the module where to find the wasm files
-	locateFile: (path) => `/wasm-lib/${path}`,
+	locateFile: (path) => `./wasm-lib/${path}`,
 	// Set info logging function
 	print: (text) => console.log(text),
 	// Set error logging function
